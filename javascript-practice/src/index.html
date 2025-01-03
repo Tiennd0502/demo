@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Author: Luan Vu, javascript practice: admin dashboard web,
+    Illustrator: design from Figma"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard Web</title>
+    <link rel="icon" type="image/x-icon" href="./assets/images/brand-image.svg" />
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="sidebar">
+        <div class="sidebar__logo">
+          <img src="./assets/images/brand-image.svg" alt="brand image" class="sidebar__logo-icon" />
+          <h1 class="sidebar__logo-text">Wons</h1>
+        </div>
+        <ul class="sidebar__menu">
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/dashboard-icon.svg"
+                alt="dashboard icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/analytic-icon.svg"
+                alt="analytics icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Analytics</span>
+            </a>
+          </li>
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/invoice-icon-active.svg"
+                alt="invoice icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Invoice</span>
+            </a>
+          </li>
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/schedule-icon.svg"
+                alt="schedule icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Schedule</span>
+            </a>
+          </li>
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/calendar-icon.svg"
+                alt="calendar icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Calendar</span>
+            </a>
+          </li>
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/message-icon.svg"
+                alt="message icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Messages</span>
+            </a>
+          </li>
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/notification-icon.svg"
+                alt="notification icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Notification</span>
+            </a>
+          </li>
+          <li class="sidebar__menu-item">
+            <a href="javascript:void(0)" class="sidebar__menu-link">
+              <img
+                src="./assets/images/icons/sidebar-icons/setting-icon.svg"
+                alt="setting icon"
+                class="sidebar__menu-icon"
+              />
+              <span class="sidebar__menu-text">Settings</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="upgrade-banner">
+          <img
+            src="./assets/images/sidebar-upgrade-image.png"
+            alt="upgrade icon"
+            class="upgrade-banner__icon"
+          />
+        </div>
+        <div class="user-profile">
+          <img
+            src="./assets/images/user-image.png"
+            alt="user profile avatar"
+            class="user-profile__avatar"
+          />
+          <div class="user-profile__info">
+            <p class="user-profile__name">Easin Arafat</p>
+            <p class="user-profile__status">Free Account</p>
+          </div>
+          <img
+            src="./assets/images/icons/sidebar-icons/logout-icon.svg"
+            alt="log out icon"
+            class="user-profile__logout"
+          />
+        </div>
+      </div>
+
+      <main class="main">
+        <div class="header">
+          <h2 class="header__text">Invoice list</h2>
+          <div class="header-actions">
+            <div class="search">
+              <input type="text" placeholder="Search" class="search-input" />
+              <img
+                src="./assets/images/icons/main-view-icons/search-icon.svg"
+                alt="search icon"
+                class="search-icon"
+              />
+            </div>
+            <button class="btn btn--add">+ Add New</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" class="checkbox" /></th>
+                <th>Invoice Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th></th>
+                <th>
+                  <img
+                    src="./assets/images/icons/main-view-icons/delete-icon.svg"
+                    alt="Deletion icon"
+                    class="delete-icon"
+                  />
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="table-body">
+              <tr>
+                <td><input type="checkbox" class="checkbox" /></td>
+                <td>#876364</td>
+                <td>
+                  <div class="name-cell">
+                    <div class="avatar"></div>
+                    <span>Arora Gaur</span>
+                  </div>
+                </td>
+                <td>aroragaur@gmail.com</td>
+                <td>12 Dec, 2020</td>
+                <td><span class="status status-complete">Complete</span></td>
+                <td>
+                  <img
+                    src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg"
+                    alt="favorite icon"
+                    class="favorite-icon-inactive"
+                  />
+                </td>
+
+                <td class="actions">...</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" /></td>
+                <td>#876123</td>
+                <td>
+                  <div class="name-cell">
+                    <div class="avatar"></div>
+                    <span>James Mullican</span>
+                  </div>
+                </td>
+                <td>jamesmullican@gmail.com</td>
+                <td>10 Dec, 2020</td>
+                <td><span class="status status-pending">Pending</span></td>
+                <td>
+                  <img
+                    src="./assets/images/icons/main-view-icons/favorite-icon-active.svg"
+                    alt="favorite icon"
+                    class="favorite-icon-active"
+                  />
+                </td>
+                <td class="actions">...</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="checkbox" /></td>
+                <td>#876213</td>
+                <td>
+                  <div class="name-cell">
+                    <div class="avatar"></div>
+                    <span>Robert Bacins</span>
+                  </div>
+                </td>
+                <td>robertbacins@gmail.com</td>
+                <td>09 Dec, 2020</td>
+                <td><span class="status status-cancel">Cancel</span></td>
+                <td>
+                  <img
+                    src="./assets/images/icons/main-view-icons/favorite-icon-active.svg"
+                    alt="favorite icon"
+                    class="favorite-icon-active"
+                  />
+                </td>
+
+                <td class="actions">...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

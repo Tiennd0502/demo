@@ -856,33 +856,11 @@
     grid-template-columns: 1fr;
   }
 
-  .sidebar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: auto;
-    z-index: 100;
-  }
-
   .user-profile.profile {
     display: none;
   }
   .sidebar__brand {
     display: none;
-  }
-
-  .sidebar__nav {
-    display: flex;
-    overflow-x: auto;
-  }
-
-  .sidebar__menu {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 0;
-    padding-top: 1rem;
   }
 
   .sidebar__menu-icon {

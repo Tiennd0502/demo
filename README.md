@@ -10,17 +10,27 @@ Welcome to my first Javascript personal project. In this topic, I will make an a
 1 Dev
 ## Technical terms
 HTML5
+
 CSS3
+
 Javascript
 ## Target
 Understand & apply knowledge of HTML/CSS/JavaScript (with ES6+ syntax).
+
 DOM manipulation, form validation.
+
 Understand how asynchronous code works & apply API integration.
+
 Write clean, apply code styles and code comments.
+
 Get familiar with Google Chrome DevTools for debugging issues (breakpoints, variables, etc).
+
 Apply ESLint
+
 Solve all errors/warnings from ESLint.
+
 Understand ESLint rules and donot turn them off to resolve current issues.
+
 Deploy to the hosting
 ## Prerequisite
 Visual Studio Code latest version 1.95.1.

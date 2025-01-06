@@ -5,14 +5,14 @@
   position: relative;
 }
 
-.sidebar__logo {
+.sidebar__brand {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 3rem;
 }
 
-.sidebar__logo-text {
+.sidebar__brand-text {
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-26);
@@ -74,7 +74,7 @@
   color: var(--other-text-color);
 }
 
-.upgrade-banner {
+.sidebar__upgrade {
   position: absolute;
   left: 2.5rem;
   bottom: 6rem;
@@ -92,7 +92,7 @@
   gap: 0.75rem;
 }
 
-.user-profile__name {
+.profile__name {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-13);
   font-weight: var(--font-weight-regular);
@@ -100,7 +100,7 @@
   color: var(--primary-text-color);
 }
 
-.user-profile__status {
+.profile__status {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-11);
   font-weight: var(--font-weight-regular);
@@ -115,26 +115,26 @@
   overflow: auto;
 }
 
-.header {
+.main__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
 }
 
-.header__text {
+.main__title {
   font-size: var(--font-size-26);
   font-weight: var(--font-weight-bold);
   line-height: 3.38rem;
   color: var(--primary-text-color);
 }
 
-.header-actions {
+.main__actions {
   display: flex;
   gap: 1rem;
 }
 
-.search {
+.main__search.search {
   width: 23rem;
   height: 4rem;
   display: flex;
@@ -144,7 +144,7 @@
   border-radius: 1rem;
 }
 
-.search-input {
+.search__input {
   flex: 1;
   height: 100%;
   outline: none;
@@ -155,13 +155,13 @@
   font-weight: var(--font-weight-regular);
 }
 
-.search-input::placeholder {
+.search__input::placeholder {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-13);
   font-weight: var(--font-weight-regular);
 }
 
-.search-icon {
+.search__icon {
   padding-right: 1rem;
 }
 
@@ -180,7 +180,7 @@
   line-height: 2.083rem;
 }
 
-.btn--add {
+.btn--primary {
   color: white;
   background-color: var(--primary-button-color);
   font-family: var(--font-family-primary);
@@ -189,28 +189,28 @@
   line-height: 2.083rem;
 }
 
-table {
+.table__content {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 1.5rem;
 }
 
-table thead tr:first-child th:first-child {
+.table__row:first-child .table__header:first-child {
   border-top-left-radius: 10px;
 }
 
-table thead tr:first-child th:last-child {
+.table__row:first-child .table__header:last-child {
   border-top-right-radius: 10px;
 }
 
-th,
-td {
+.table__header,
+.table__cell {
   padding: 1rem 1.5rem;
   text-align: left;
   border: none;
 }
 
-th {
+.table__header {
   background-color: var(--secondary-bg-color);
   font-weight: 500;
   color: var(--primary-text-color);
@@ -221,24 +221,24 @@ th {
   opacity: 0.7;
 }
 
-.table-body tr {
+.table__body .table__row {
   background-color: var(--primary-bg-color);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.table-body tr td:first-child {
+.table__cell:first-child {
   border-bottom-left-radius: 1rem;
   border-top-left-radius: 1rem;
 }
 
-.table-body tr td:last-child {
+.table__cell:last-child {
   border-bottom-right-radius: 1rem;
   border-top-right-radius: 1rem;
 }
 
-td {
+.table__cell {
   border-bottom: 1px solid #e5e7eb;
   font-size: var(--font-size-14);
   font-weight: var(--font-weight-regular);
@@ -287,12 +287,13 @@ td {
   line-height: 1.82rem;
   border-radius: 2.25rem;
 }
-.checkbox {
+
+.table__checkbox {
   width: 16px;
   height: 16px;
 }
 
-.actions {
+.table__cell--actions {
   font-size: var(--font-size-26);
   opacity: 0.3;
   cursor: pointer;
@@ -300,12 +301,12 @@ td {
   vertical-align: middle;
 }
 
-.actions:hover {
+.table__cell--actions:hover {
   opacity: 1;
   color: var(--other-text-color);
 }
 
-.name-cell,
+.table__user,
 .date-cell,
 .email-cell,
 .table-head-cells {
@@ -324,7 +325,7 @@ td {
   column-gap: 3rem;
 }
 
-.form-section {
+.form {
   flex: 1;
   background-color: #ffffff;
   border-radius: 1rem;
@@ -332,7 +333,7 @@ td {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.form-header__title {
+.form__header-title {
   margin-bottom: 2rem;
   font-size: var(--font-size-26);
   font-weight: var(--font-weight-bold);
@@ -351,11 +352,6 @@ td {
   border-radius: 50%;
 }
 
-.form-header__actions {
-  display: flex;
-  gap: 1rem;
-}
-
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -363,17 +359,17 @@ td {
   margin-bottom: 2rem;
 }
 
-.form-group {
+.form__group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group:nth-child(5) {
+.form__group:nth-child(5) {
   grid-column: 1 / -1;
 }
 
-.form-group__address {
+.form__group-address {
   display: flex;
   background-color: var(--secondary-bg-color);
   margin-top: 1rem;
@@ -381,25 +377,25 @@ td {
   border-radius: 1rem;
 }
 
-.form-group:nth-child(5) .form-group__input {
+.form__group:nth-child(5) .form__group-input {
   flex: 1;
 }
 
-.location-icon {
+.form__group-address-icon {
   padding-right: 1.7rem;
 }
 
-.form-group__address .form-group__input {
+.form__group-address .form__group-input {
   margin-top: 0;
 }
 
-.form-group__label {
+.form__group-label {
   font-size: var(--font-size-16);
   font-weight: var(--font-weight-medium);
   color: var(--primary-text-color);
 }
 
-.form-group__input {
+.form__group-input {
   min-width: 24rem;
   margin-top: 1rem;
   padding: 1.7rem;
@@ -411,7 +407,7 @@ td {
   transition: border-color 0.3s ease;
 }
 
-.form-group__input:focus {
+.form__group-input:focus {
   outline: none;
   border-color: var(--primary-color);
 }
@@ -505,33 +501,33 @@ td {
   opacity: 0.9;
 }
 
-.preview-section {
+.preview {
   flex: 1;
   background-color: var(--primary-bg-color);
   border-radius: 1rem;
   padding: 2rem;
 }
 
-.preview-header {
+.preview__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
 
-.preview-header__title {
+.preview__header-title {
   font-size: 24px;
   font-weight: 700;
   line-height: 32.74px;
   text-align: left;
 }
 
-.preview-header__actions {
+.preview__main__actions {
   display: flex;
   gap: 3rem;
 }
 
-.preview-header__button {
+.preview__header__button {
   padding: 0.5rem;
   border: none;
   background: #f8fafc;
@@ -540,12 +536,12 @@ td {
   cursor: pointer;
 }
 
-.preview-content {
+.preview__content {
   background-color: var(--secondary-bg-color);
   padding: 3rem 3rem 1rem;
 }
 
-.preview-customer {
+.preview__customer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -553,13 +549,13 @@ td {
   margin-bottom: 2rem;
 }
 
-.preview-customer__logo {
+.preview__customer-logo {
   font-size: 5rem;
   color: var(--other-text-color);
   font-weight: bold;
 }
 
-.preview-customer__email {
+.preview__customer-email {
   font-family: var(--font-family-secondary);
   font-size: 0.8rem;
   font-weight: var(--font-weight-regular);
@@ -575,7 +571,7 @@ td {
   margin-left: 0.5rem;
 }
 
-.preview-customer__phone {
+.preview__customer-phone {
   font-family: var(--font-family-secondary);
   font-size: 0.8rem;
   font-weight: var(--font-weight-regular);
@@ -591,16 +587,16 @@ td {
   margin-left: 0.5rem;
 }
 
-.preview-invoice {
+.preview__invoice {
   margin-bottom: 2rem;
 }
 
-.preview-invoice__details {
+.preview__invoice-details {
   display: flex;
   justify-content: space-between;
 }
 
-.preview-invoice__header {
+.preview__invoice-header {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -610,7 +606,7 @@ td {
   margin-top: 2rem;
 }
 
-.recipient-info {
+.recipient__info {
   text-transform: uppercase;
   font-size: 8px;
   font-weight: 700;
@@ -648,7 +644,7 @@ td {
   color: var(--other-text-color);
 }
 
-.preview-invoice__title {
+.preview__invoice-title {
   font-size: 22.78px;
   font-weight: 700;
   line-height: 29.66px;
@@ -661,7 +657,7 @@ td {
   flex-direction: column;
 }
 
-.preview-invoice__label {
+.preview__invoice-label {
   font-size: 10px;
   font-weight: 400;
   line-height: 13.02px;
@@ -669,7 +665,7 @@ td {
   margin-bottom: 1.5rem;
 }
 
-.preview-invoice__label span {
+.preview__invoice-label span {
   font-size: 8px;
   font-weight: 400;
   line-height: 10.42px;
@@ -818,7 +814,7 @@ td {
   color: #99b2c6;
 }
 
-.preview-customer__info {
+.preview__customer-info {
   text-align: left;
 }
 
@@ -826,8 +822,8 @@ td {
   text-align: right;
 }
 
-.preview-footer__company .preview-customer__email,
-.preview-footer__company .preview-customer__phone {
+.preview-footer__company .preview__customer-email,
+.preview-footer__company .preview__customer-phone {
   font-size: 6px;
   font-weight: 400;
   line-height: 8.17px;

@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create New Invoice</title>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
+
     <link rel="stylesheet" href="./styles/main.css" />
   </head>
   <body>
@@ -130,6 +127,14 @@
             <h3 class="form-header__title">Create New Invoice</h3>
           </div>
 
+          <div class="form__camera">
+            <img
+              class="camera-icon"
+              src="./assets/images/icons/create-invoice-modal-icons/camera-icon.svg"
+              alt="picture icon"
+            />
+          </div>
+
           <div class="form-grid">
             <div class="form-group">
               <label class="form-group__label">Invoice ID</label>
@@ -147,9 +152,16 @@
               <label class="form-group__label">Email</label>
               <input class="form-group__input" type="email" placeholder="example@gmail.com" />
             </div>
-            <div class="form-group" style="grid-column: 1 / -1">
+            <div class="form-group">
               <label class="form-group__label">Address</label>
-              <input class="form-group__input" type="text" placeholder="Street" />
+              <div class="form-group__address">
+                <input class="form-group__input" type="text" placeholder="Street" />
+                <img
+                  class="location-icon"
+                  src="./assets/images/icons/create-invoice-modal-icons/location-icon.svg"
+                  alt="location icon"
+                />
+              </div>
             </div>
           </div>
 
@@ -221,12 +233,18 @@
           <div class="preview-header">
             <h2 class="preview-header__title">Preview</h2>
             <div class="preview-header__actions">
-              <button class="preview-header__button">
-                <i class="fas fa-download"></i>
-              </button>
-              <button class="preview-header__button">
-                <i class="fas fa-print"></i>
-              </button>
+              <a href="javascript:void(0)">
+                <img
+                  src="./assets/images/icons/preview-section-icons/download-icon.svg"
+                  alt="download icon"
+                />
+              </a>
+              <a href="javascript:void(0)">
+                <img
+                  src="./assets/images/icons/preview-section-icons/print-icon.svg"
+                  alt="printer icon"
+                />
+              </a>
             </div>
           </div>
 
@@ -266,8 +284,13 @@
                 <div class="preview-invoice__header">
                   <div class="preview-invoice__title">Invoice</div>
                   <div class="invoice-number">
-                    <div class="preview-invoice__label">Invoice No: <span>#876370</span></div>
-                    <div class="preview-invoice__label">Invoice Date: <span>01/02/2021</span></div>
+                    <div class="preview-invoice__label">
+                      Invoice No: <br /><span>001/2021</span>
+                    </div>
+                    <div class="preview-invoice__label">
+                      Invoice Date: <br />
+                      <span>January 1, 2021</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -286,14 +309,14 @@
               <tr class="preview-table__row">
                 <td class="product-list__cell">Website Redesign</td>
                 <td class="product-list__cell">60</td>
-                <td class="product-list__cell">$15</td>
-                <td class="product-list__cell">$900</td>
+                <td class="product-list__cell">$15 USD</td>
+                <td class="product-list__cell">$900 USD</td>
               </tr>
               <tr class="preview-table__row">
                 <td class="product-list__cell">Newsletter Template</td>
                 <td class="product-list__cell">20</td>
-                <td class="product-list__cell">$12</td>
-                <td class="product-list__cell">$240</td>
+                <td class="product-list__cell">$12 USD</td>
+                <td class="product-list__cell">$240 USD</td>
               </tr>
             </tbody>
           </table>
@@ -316,15 +339,16 @@
           <div class="preview-footer">
             <div class="preview-footer__payment">
               <p>to the business account below. Please include invoice number on your check.</p>
-              <p>
-                <span>BANK: FTSBUS33</span>
-                <span>IBAN: GB82-1111-2222-3333</span>
+              <p class="payment__bank-acc">
+                BANK:
+                <span class="bank-acc__info"> FTSBUS33</span>
+                IBAN: <span class="bank-acc__info"> GB82-1111-2222-3333</span>
               </p>
             </div>
 
             <div class="preview-footer__notes">
-              <h3>NOTES</h3>
-              <p>
+              <h3 class="notes__header">NOTES</h3>
+              <p class="notes__content">
                 All amounts are in dollars. Please make the payment within 15 days from the issue of
                 date of this invoice. Tax is not charged on the basis of paragraph 1 of Article 94
                 of the Value Added Tax Act (I am not liable for VAT).
@@ -333,15 +357,20 @@
             </div>
 
             <div class="preview-footer__company">
-              <div class="preview-footer__company-left">
+              <div class="preview-footer__company-details">
                 <p>YOUR COMPANY</p>
                 <p>1331 Hart Ridge Road, 49436 Gaines, MI</p>
-                <p>
-                  <span>your.mail@gmail.com</span><br />
-                  <span>+388 989 217 315</span>
-                </p>
               </div>
-              <div class="preview-footer__company-right">
+              <div class="preview-customer__info">
+                <div class="preview-customer__email">
+                  @ <span class="email-address">your.mail@gmail.com</span>
+                </div>
+                <div class="preview-customer__phone">
+                  m <span class="phone-number">+388 953 217 3815</span>
+                </div>
+              </div>
+
+              <div class="preview-footer__company-copyright">
                 <p>The company is registered in the<br />business register under no. 87600000</p>
               </div>
             </div>

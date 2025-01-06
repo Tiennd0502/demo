@@ -168,7 +168,7 @@
 .product-list__action-button--button-delete {
   padding: 1rem;
   border-radius: 50%;
-  background-color: rgba(231, 29, 54, 0.5);
+  background-color: rgba(231, 29, 54, 0.05);
 }
 
 .form__action-buttons {
@@ -195,13 +195,10 @@
   opacity: 0.9;
 }
 
-/*  */
-
 .sidebar-toggle {
   display: none;
 }
 
-/* Toggle button styling */
 .sidebar-toggle-label {
   display: none;
   position: fixed;
@@ -269,7 +266,7 @@
   }
 
   .sidebar__nav::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
   }
 
   .sidebar__menu {
@@ -321,7 +318,6 @@
     overflow-y: auto;
   }
 
-  /* Toggle icon animation */
   .sidebar-toggle:checked + .sidebar-toggle-label .toggle-icon {
     background: transparent;
   }
@@ -336,7 +332,6 @@
     transform: rotate(-45deg);
   }
 
-  /* Adjust main content */
   .main {
     padding-bottom: 4rem;
   }

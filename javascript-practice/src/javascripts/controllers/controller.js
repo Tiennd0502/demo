@@ -1,4 +1,5 @@
 import Invoice from '../model/model.js';
+import Templates from '../templates/templates.js';
 import InvoiceView from '../views/view.js';
 class InvoiceController {
   constructor() {
@@ -10,6 +11,10 @@ class InvoiceController {
   }
 
   init() {
+    const formContainer = document.querySelector('.form-container');
+    if (formContainer) {
+      formContainer.innerHTML = Templates.genericForm('create') + Templates.genericForm('edit');
+    }
     //click x button to close form edit and form create invoice
     document.querySelectorAll('.form__header-close').forEach((btn) => {
       btn.addEventListener('click', () => this.closeForm());
@@ -191,7 +196,8 @@ class InvoiceController {
     );
     if (activeForm) {
       const tbody = activeForm.querySelector('.product-list__table .product-list__table-body');
-      tbody.innerHTML = this.addProductRow(activeForm);
+      tbody.innerHTML = '';
+      tbody.insertAdjacentHTML('beforeend', this.addProductRow());
     }
   }
   resetFormStates() {
@@ -220,9 +226,9 @@ class InvoiceController {
         </td>
       </tr>
     `;
-    const activeForm =
-      document.querySelector('.form--create:not(.hidden)') ||
-      document.querySelector('.form--edit:not(.hidden)');
+    const activeForm = document.querySelector(
+      '.form--create:not(.hidden), .form--edit:not(.hidden)',
+    );
     const tbody = activeForm.querySelector('.product-list__table .product-list__table-body');
     tbody.insertAdjacentHTML('beforeend', newRow);
     this.updateAmounts(tbody);
@@ -292,6 +298,7 @@ class InvoiceController {
     );
     this.invoices.push(invoice);
     this.view.renderInvoiceList(this.invoices);
+
     this.view.renderInvoicePreview(invoice);
 
     this.resetFormStates();
@@ -347,9 +354,8 @@ class InvoiceController {
     }
 
     // Fill in products
-    const tbody = editForm.querySelector(
-      '.form--edit .product-list__table .product-list__table-body',
-    );
+    const tbody = editForm.querySelector('.product-list__table .product-list__table-body');
+    tbody.innerHTML = '';
     tbody.innerHTML = invoice.products
       .map(
         (product) => `
@@ -395,9 +401,7 @@ class InvoiceController {
     this.view.renderInvoicePreview(this.invoices[index]);
 
     // Reset visibility states
-    document.querySelector('.content').style.display = 'none';
-    document.querySelector('.main').classList.remove('hidden');
-    document.querySelector('.form--edit').classList.add('hidden');
+    this.resetFormStates();
   }
 
   updatePreview() {

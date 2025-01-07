@@ -1,21 +1,15 @@
-export const createInvoiceFormTemplate = () => `
-<div class="form--create">
+const Templates = {
+  genericForm: (type) => `
+  <div class="form--${type} ${type === 'edit' ? 'hidden' : ''}">
     <div class="form__header">
-      <h3 class="form__header-title">Create New Invoice</h3>
+      <h3 class="form__header-title">${type === 'create' ? 'Create New Invoice' : 'Edit This Invoice'}</h3>
       <button class="btn form__header-close">
-        <img
-          src="./assets/images/icons/create-invoice-modal-icons/close-icon.png"
-          alt="close icon"
-        />
+        <img src="./assets/images/icons/create-invoice-modal-icons/close-icon.png" alt="close icon" />
       </button>
     </div>
 
     <div class="form__camera">
-      <img
-        class="form__camera-icon"
-        src="./assets/images/icons/create-invoice-modal-icons/camera-icon.svg"
-        alt="picture icon"
-      />
+      <img class="form__camera-icon" src="./assets/images/icons/create-invoice-modal-icons/camera-icon.svg" alt="picture icon" />
     </div>
 
     <div class="form-grid">
@@ -39,11 +33,7 @@ export const createInvoiceFormTemplate = () => `
         <label class="form__group-label">Address</label>
         <div class="form__group-address">
           <input class="form__group-input" type="text" placeholder="Street" />
-          <img
-            class="form__group-address-icon"
-            src="./assets/images/icons/create-invoice-modal-icons/location-icon.svg"
-            alt="location icon"
-          />
+          <img class="form__group-address-icon" src="./assets/images/icons/create-invoice-modal-icons/location-icon.svg" alt="location icon" />
         </div>
       </div>
     </div>
@@ -51,9 +41,7 @@ export const createInvoiceFormTemplate = () => `
     <div class="product-list">
       <div class="product-list__title">
         <h4 class="product-list__title-text">Product Description</h4>
-        <button class="btn product-list__action-buttons product-list__action-button--button-add">
-          +
-        </button>
+        <button class="btn product-list__action-buttons product-list__action-button--button-add">+</button>
       </div>
       <table class="product-list__table">
         <thead class="product-list__table-head">
@@ -70,91 +58,11 @@ export const createInvoiceFormTemplate = () => `
     </div>
 
     <div class="form__action-buttons">
-      <button class="btn form__action-buttons--button-send">Send Invoice</button>
-      <button class="btn form__action-buttons--button-create">Create Invoice</button>
+      <button class="btn form__action-buttons--button-${type === 'create' ? 'create' : 'save'}">${type === 'create' ? 'Create Invoice' : 'Save Changes'}</button>
     </div>
   </div>
-`;
-
-export const editInvoiceFormTemplate = () => `
-  <div class="form--edit hidden">
-    <div class="form__header">
-      <h3 class="form__header-title">Edit This Invoice</h3>
-      <button class="btn form__header-close">
-        <img
-          src="./assets/images/icons/create-invoice-modal-icons/close-icon.png"
-          alt="close icon"
-        />
-      </button>
-    </div>
-
-    <div class="form__camera">
-      <img
-        class="form__camera-icon"
-        src="./assets/images/icons/create-invoice-modal-icons/camera-icon.svg"
-        alt="picture icon"
-      />
-    </div>
-
-    <div class="form-grid">
-      <div class="form__group">
-        <label class="form__group-label">Invoice ID</label>
-        <input class="form__group-input" type="text" placeholder="#876370" />
-      </div>
-      <div class="form__group">
-        <label class="form__group-label">Date</label>
-        <input class="form__group-input" type="date" />
-      </div>
-      <div class="form__group">
-        <label class="form__group-label">Name</label>
-        <input class="form__group-input" type="text" placeholder="Alison G." />
-      </div>
-      <div class="form__group">
-        <label class="form__group-label">Email</label>
-        <input class="form__group-input" type="email" placeholder="example@gmail.com" />
-      </div>
-      <div class="form__group">
-        <label class="form__group-label">Address</label>
-        <div class="form__group-address">
-          <input class="form__group-input" type="text" placeholder="Street" />
-          <img
-            class="form__group-address-icon"
-            src="./assets/images/icons/create-invoice-modal-icons/location-icon.svg"
-            alt="location icon"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="product-list">
-      <div class="product-list__title">
-        <h4 class="product-list__title-text">Product Description</h4>
-        <button class="btn product-list__action-buttons product-list__action-button--button-add">
-          +
-        </button>
-      </div>
-      <table class="product-list__table">
-        <thead class="product-list__table-head">
-          <tr class="product-list__table-row">
-            <th class="product-list__header">Product Name</th>
-            <th class="product-list__header">Rate</th>
-            <th class="product-list__header">Qty</th>
-            <th class="product-list__header">Amount</th>
-            <th class="product-list__header"></th>
-          </tr>
-        </thead>
-        <tbody class="product-list__table-body"></tbody>
-      </table>
-    </div>
-
-    <div class="form__action-buttons">
-      <button class="btn form__action-buttons--button-send">Send Invoice</button>
-      <button class="btn form__action-buttons--button-save">Save Changes</button>
-    </div>
-  </div>
-`;
-
-export const invoiceTableTemplate = () => `
+`,
+  invoiceTableTemplate: `
   <table class="table__content">
     <thead class="table__head">
       <tr class="table__row">
@@ -221,9 +129,8 @@ export const invoiceTableTemplate = () => `
     </thead>
     <tbody class="table__body"></tbody>
   </table>
-`;
-
-export const previewTemplate = () => `
+`,
+  previewTemplate: `
   <div class="preview__header">
     <h2 class="preview__header-title">Preview</h2>
     <div class="preview__main__actions">
@@ -350,4 +257,7 @@ export const previewTemplate = () => `
       </div>
     </div>
   </div>
-`;
+`,
+};
+
+export default Templates;

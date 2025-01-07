@@ -87,6 +87,9 @@ class InvoiceView {
     this.previewSection.querySelector('.preview__invoice-label--date').innerHTML =
       `Invoice Date: <br/>
       <span>${invoice.date}</span>`;
+
+    const previewTbody = this.previewSection.querySelector('tbody');
+    previewTbody.innerHTML = ''; // Clear previous rows
     const productRows = invoice.products
       .map(
         (product) => `
@@ -94,14 +97,16 @@ class InvoiceView {
           <td class="product-list__cell">${product.name}</td>
           <td class="product-list__cell">${product.rate}</td>
           <td class="product-list__cell">${product.quantity}</td>
-          <td class="product-list__cell">${product.rate * product.quantity}</td>
+          <td class="product-list__cell">${(product.rate * product.quantity).toFixed(2)}</td>
         </tr>`,
       )
       .join('');
 
-    this.previewSection.querySelector('tbody').innerHTML = productRows;
-    this.previewSection.querySelector('.preview-summary__value').innerHTML =
-      `$${invoice.getTotalAmount()}`;
+    previewTbody.innerHTML = productRows;
+    const summarySection = this.previewSection.querySelector('.preview-summary');
+    summarySection.querySelector('.preview-summary__value').textContent =
+      `$${invoice.getTotalAmount().toFixed(2)}`;
+    console.log('renderInvoicePreview called with invoice:', invoice);
   }
 }
 

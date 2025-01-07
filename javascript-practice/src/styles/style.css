@@ -220,7 +220,8 @@
   column-gap: 3rem;
 }
 
-.form {
+.form--create,
+.form--edit {
   flex: 1;
   background-color: #ffffff;
   border-radius: 1rem;
@@ -232,6 +233,28 @@
   margin-bottom: 2rem;
   font-size: var(--font-size-26);
   font-weight: var(--font-weight-bold);
+}
+
+.form__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form__header-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.8rem;
+}
+
+.form__header-close:hover {
+  opacity: 0.8;
+}
+
+.form__header-close img {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .form__camera {
@@ -355,7 +378,10 @@
 }
 
 .product-list__cell input {
-  min-width: 8rem;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0.8rem;
 }
 
 .product-list__cell:nth-child(5) {
@@ -1139,13 +1165,14 @@
 
   /* Add labels for each cell */
   .table__cell::before {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     content: attr(data-label);
     width: 10rem;
     min-width: 9rem;
     color: #0c0808;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    font-size: var(--font-size-14);
   }
 
   /* User info styling */
@@ -1299,6 +1326,15 @@
   }
   .main__search.search {
     padding: 1rem;
+  }
+  .product-list__cell input {
+    width: 100%;
+    padding: 4px;
+    font-size: 14px;
+  }
+
+  .product-list__cell {
+    padding: 4px;
   }
 }
 

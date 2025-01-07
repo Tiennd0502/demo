@@ -165,6 +165,7 @@
   display: none;
 }
 
+/* product list */
 .product-list__action-button--button-delete {
   padding: 1rem;
   border-radius: 50%;

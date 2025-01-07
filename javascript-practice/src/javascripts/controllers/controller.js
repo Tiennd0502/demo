@@ -10,29 +10,92 @@ class InvoiceController {
   }
 
   init() {
+    document.querySelectorAll('.form__header-close').forEach((btn) => {
+      btn.addEventListener('click', () => this.closeForm());
+    });
+
     document.querySelector('.btn--primary').addEventListener('click', () => this.showCreateForm());
     document
       .querySelector('.form__action-buttons--button-create')
       .addEventListener('click', () => this.addInvoice());
     this.view.invoiceList.addEventListener('click', (e) => this.handleListClick(e));
+
+    document
+      .querySelector('.form--edit .form__action-buttons--button-create')
+      .addEventListener('click', () => this.saveChanges());
+
     this.setupProductListHandlers();
   }
 
   setupProductListHandlers() {
-    const addProductBtn = document.querySelector('.product-list__action-button--button-add');
-    addProductBtn.addEventListener('click', () => this.addProductRow());
+    const addProductBtn = document.querySelectorAll('.product-list__action-button--button-add');
+    addProductBtn.forEach((btn) => {
+      btn.addEventListener('click', () => this.addProductRow());
+    });
 
-    document.querySelector('.product-list__table tbody').addEventListener('click', (e) => {
-      if (e.target.closest('.product-list__action-button--button-delete')) {
-        e.target.closest('tr').remove();
-        this.updatePreview();
-      }
+    const forms = document.querySelectorAll('.form--create, .form--edit');
+    forms.forEach((form) => {
+      const tbody = form.querySelector('.product-list__table tbody');
+
+      // Handle delete buttons
+      tbody.addEventListener('click', (e) => {
+        if (e.target.closest('.product-list__action-button--button-delete')) {
+          const row = e.target.closest('tr');
+          if (tbody.children.length > 1) {
+            // Keep at least one row
+            row.remove();
+          } else {
+            // Clear inputs if it's the last row
+            row.querySelectorAll('input').forEach((input) => (input.value = ''));
+          }
+          this.updateAmounts(tbody);
+        }
+      });
+
+      // Handle input changes
+      tbody.addEventListener('input', (e) => {
+        if (e.target.matches('.rate-input, .qty-input')) {
+          this.updateAmounts(tbody);
+        }
+      });
     });
   }
+
+  updateAmounts(tbody) {
+    // Update amount for each row
+    const rows = tbody.querySelectorAll('.product-list__table-row');
+    rows.forEach((row) => {
+      const rate = parseFloat(row.querySelector('.rate-input').value) || 0;
+      const qty = parseInt(row.querySelector('.qty-input').value) || 0;
+      const amount = rate * qty;
+      row.querySelector('td:nth-child(4)').textContent = `$${amount.toFixed(2)}`;
+    });
+
+    // Update preview if needed
+    this.updatePreview();
+  }
+
+  closeForm() {
+    document.querySelector('.form--create').classList.add('hidden');
+    document.querySelector('.form--edit').classList.add('hidden');
+    document.querySelector('.content').style.display = 'none';
+    document.querySelector('.main').classList.remove('hidden');
+    this.resetForm();
+  }
+
   showCreateForm() {
     document.querySelector('.main').classList.add('hidden');
     document.querySelector('.content').style.display = 'grid';
+    document.querySelector('.form--create').classList.remove('hidden');
+    document.querySelector('.form--edit').classList.add('hidden');
     this.resetForm();
+  }
+
+  showEditForm() {
+    document.querySelector('.main').classList.add('hidden');
+    document.querySelector('.content').style.display = 'grid';
+    document.querySelector('.form--create').classList.add('hidden');
+    document.querySelector('.form--edit').classList.remove('hidden');
   }
 
   resetForm() {
@@ -40,6 +103,14 @@ class InvoiceController {
     inputs.forEach((input) => (input.value = ''));
     document.querySelector('.product-list__table .product-list__table-body').innerHTML =
       this.getEmptyProductRow();
+  }
+
+  resetFormStates() {
+    // Hide all forms first
+    document.querySelector('.form--create').classList.add('hidden');
+    document.querySelector('.form--edit').classList.add('hidden');
+    document.querySelector('.content').style.display = 'none';
+    document.querySelector('.main').classList.remove('hidden');
   }
 
   getEmptyProductRow() {
@@ -63,31 +134,56 @@ class InvoiceController {
   }
 
   addProductRow() {
-    const tbody = document.querySelector('.product-list__table .product-list__table-body');
-    tbody.insertAdjacentHTML('beforeend', this.getEmptyProductRow());
+    // Find the closest tbody to the clicked add button
+    document.querySelectorAll('.form--create, .form--edit').forEach((form) => {
+      const tbody = form.querySelector('.product-list__table .product-list__table-body');
+      if (!tbody.children.length) {
+        tbody.innerHTML = this.getEmptyProductRow();
+      }
+    });
   }
 
   collectFormData() {
     const products = [];
+    const activeForm =
+      document.querySelector('.form--create:not(.hidden)') ||
+      document.querySelector('.form--edit:not(.hidden)');
+
+    if (!activeForm) return null;
+
     const rows = document.querySelectorAll(
       '.product-list__table .product-list__table-body .product-list__table-row',
     );
 
     rows.forEach((row) => {
-      const product = {
-        name: row.querySelector('.product-input').value,
-        rate: parseFloat(row.querySelector('.rate-input').value) || 0,
-        quantity: parseInt(row.querySelector('.qty-input').value) || 0,
-      };
-      if (product.name) products.push(product);
+      const productInput = row.querySelector('.product-input');
+      const rateInput = row.querySelector('.rate-input');
+      const qtyInput = row.querySelector('.qty-input');
+
+      if (productInput && rateInput && qtyInput) {
+        const name = productInput.value.trim();
+        const rate = parseFloat(rateInput.value) || 0;
+        const quantity = parseInt(qtyInput.value) || 0;
+
+        if (name || rate || quantity) {
+          // Only add if any field has a value
+          products.push({ name, rate, quantity });
+        }
+      }
     });
 
+    // Get form fields using more specific selectors
+    const nameInput = activeForm.querySelector('input[placeholder="Alison G."]');
+    const emailInput = activeForm.querySelector('input[placeholder="example@gmail.com"]');
+    const dateInput = activeForm.querySelector('input[type="date"]');
+    const addressInput = activeForm.querySelector('input[placeholder="Street"]');
+
     return {
-      id: `INV-${Date.now()}`,
-      name: document.querySelector('.form__group-input[placeholder="Alison G."]').value,
-      email: document.querySelector('.form__group-input[placeholder="example@gmail.com"]').value,
-      date: document.querySelector('.form__group-input[type="date"]').value,
-      address: document.querySelector('.form__group-input[placeholder="Street"]').value,
+      id: activeForm.querySelector('input[placeholder="#876370"]')?.value || `INV-${Date.now()}`,
+      name: activeForm.querySelector('input[placeholder="Alison G."]')?.value || '',
+      email: activeForm.querySelector('input[type="email"]')?.value || '',
+      date: activeForm.querySelector('input[type="date"]')?.value || '',
+      address: activeForm.querySelector('input[placeholder="Street"]')?.value || '',
       status: 'Pending',
       products,
     };
@@ -95,7 +191,7 @@ class InvoiceController {
 
   addInvoice() {
     const data = this.collectFormData();
-    if (!this.validateInvoice(data)) return;
+    if (!data || !this.validateInvoice(data)) return;
 
     const invoice = new Invoice(
       data.id,
@@ -109,8 +205,11 @@ class InvoiceController {
     this.invoices.push(invoice);
     this.view.renderInvoiceList(this.invoices);
     this.view.renderInvoicePreview(invoice);
+
     document.querySelector('.content').style.display = 'none';
     document.querySelector('.main').classList.remove('hidden');
+    document.querySelector('.form--create').classList.add('hidden');
+    document.querySelector('.form--edit').classList.add('hidden');
   }
 
   validateInvoice(data) {
@@ -122,11 +221,13 @@ class InvoiceController {
   }
 
   handleListClick(e) {
+    const clickedElement = e.target;
     const row = e.target.closest('.table__row');
     if (!row) return;
 
-    const id = row.querySelector('[data-label="Invoice Id"]').textContent;
-
+    const idCell = row.querySelector('[data-label="Invoice Id"]');
+    if (!idCell) return;
+    const id = idCell.textContent;
     if (e.target.closest('.btn--delete')) {
       this.deleteInvoice(id);
     } else if (e.target.closest('.btn--edit')) {
@@ -144,22 +245,25 @@ class InvoiceController {
     const invoice = this.invoices.find((invoice) => invoice.id === id);
     if (!invoice) return;
 
-    this.showCreateForm();
-    document.querySelector('.form__group-input[placeholder="#876370"]').value = invoice.id;
-    document.querySelector('.form__group-input[placeholder="Alison G."]').value = invoice.name;
-    document.querySelector('.form__group-input[placeholder="example@gmail.com"]').value =
-      invoice.email;
-    document.querySelector('.form__group-input[type="date"]').value = invoice.date;
-    document.querySelector('.form__group-input[placeholder="Street"]').value = invoice.address;
-    const tbody = document.querySelector('.product-list__table .product-list__table-body');
+    this.showEditForm();
+    const editForm = document.querySelector('.form--edit');
+    editForm.querySelector('input[placeholder="#876370"]').value = invoice.id;
+    editForm.querySelector('input[placeholder="Alison G."]').value = invoice.name;
+    editForm.querySelector('input[type="email"]').value = invoice.email;
+    editForm.querySelector('input[type="date"]').value = invoice.date;
+    editForm.querySelector('input[placeholder="Street"]').value = invoice.address;
+
+    const tbody = document.querySelector(
+      '.form--edit .product-list__table .product-list__table-body',
+    );
     tbody.innerHTML = invoice.products
       .map(
         (product) => `
-      <tr>
+      <tr class="product-list__table-row">
         <td class="product-list__cell"><input type="text" class="product-input" value="${product.name}"></td>
         <td class="product-list__cell"><input type="number" class="rate-input" value="${product.rate}"></td>
         <td class="product-list__cell"><input type="number" class="qty-input" value="${product.quantity}"></td>
-        <td class="product-list__cell">$${product.rate * product.quantity}</td>
+        <td class="product-list__cell">$${product.rate * product.quantity.toFixed(2)}</td>
         <td class="product-list__cell">
           <button class="btn product-list__action-buttons product-list__action-button--button-delete">
             <img src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg" alt="delete icon" class="delete-icon">
@@ -170,9 +274,17 @@ class InvoiceController {
       )
       .join('');
   }
-  updatePreview() {
+
+  saveChanges() {
     const data = this.collectFormData();
-    const tempInvoice = new this.model(
+    if (!data || !this.validateInvoice(data)) return;
+
+    // Find the invoice index
+    const index = this.invoices.findIndex((inv) => inv.id === data.id);
+    if (index === -1) return;
+
+    // Update the invoice
+    this.invoices[index] = new Invoice(
       data.id,
       data.name,
       data.email,
@@ -181,7 +293,34 @@ class InvoiceController {
       data.status,
       data.products,
     );
-    this.view.renderInvoicePreview(tempInvoice);
+
+    this.view.renderInvoiceList(this.invoices);
+    this.view.renderInvoicePreview(this.invoices[index]);
+
+    // Reset visibility states
+    document.querySelector('.content').style.display = 'none';
+    document.querySelector('.main').classList.remove('hidden');
+    document.querySelector('.form--edit').classList.add('hidden');
+  }
+
+  updatePreview() {
+    const data = this.collectFormData();
+    if (!data) return;
+
+    try {
+      const tempInvoice = new Invoice(
+        data.id,
+        data.name,
+        data.email,
+        data.date,
+        data.address,
+        data.status,
+        data.products,
+      );
+      this.view.renderInvoicePreview(tempInvoice);
+    } catch (error) {
+      console.error('Error updating preview:', error);
+    }
   }
 }
 export default InvoiceController;

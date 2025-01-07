@@ -254,7 +254,7 @@
                 <td class="table__cell" data-label="Status">
                   <span class="status status-complete">Complete</span>
                 </td>
-                <td class="table__cell">
+                <td class="table__cell" data-label="Favorite">
                   <img
                     src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg"
                     alt="favorite icon"
@@ -262,7 +262,7 @@
                   />
                 </td>
 
-                <td class="table__cell table__cell--actions">
+                <td class="table__cell table__cell--actions" data-label="Actions">
                   <span>...</span>
                   <button class="btn btn--edit">
                     <img
@@ -315,7 +315,7 @@
                 <td class="table__cell" data-label="Status">
                   <span class="status status-pending">Pending</span>
                 </td>
-                <td class="table__cell">
+                <td class="table__cell" data-label="Favorite">
                   <img
                     src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg"
                     alt="favorite icon"
@@ -323,7 +323,7 @@
                   />
                 </td>
 
-                <td class="table__cell table__cell--actions">
+                <td class="table__cell table__cell--actions" data-label="Actions">
                   <span>...</span>
                   <button class="btn btn--edit">
                     <img
@@ -377,7 +377,7 @@
                 <td class="table__cell" data-label="Status">
                   <span class="status status-cancel">Cancel</span>
                 </td>
-                <td class="table__cell">
+                <td class="table__cell" data-label="Favorite">
                   <img
                     src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg"
                     alt="favorite icon"
@@ -385,7 +385,7 @@
                   />
                 </td>
 
-                <td class="table__cell table__cell--actions">
+                <td data-label="Actions" class="table__cell table__cell--actions">
                   <span>...</span>
                   <button class="btn btn--edit">
                     <img
@@ -410,9 +410,15 @@
 
       <!-- add -->
       <div class="content hidden">
-        <div class="form">
+        <div class="form--create">
           <div class="form__header">
             <h3 class="form__header-title">Create New Invoice</h3>
+            <button class="btn form__header-close">
+              <img
+                src="./assets/images/icons/create-invoice-modal-icons/close-icon.png"
+                alt="close icon"
+              />
+            </button>
           </div>
 
           <div class="form__camera">
@@ -514,6 +520,119 @@
           <div class="form__action-buttons">
             <button class="btn form__action-buttons--button-send">Send Invoice</button>
             <button class="btn form__action-buttons--button-create">Create Invoice</button>
+          </div>
+        </div>
+
+        <div class="form--edit hidden">
+          <div class="form__header">
+            <h3 class="form__header-title">Edit This Invoice</h3>
+            <button class="btn form__header-close">
+              <img
+                src="./assets/images/icons/create-invoice-modal-icons/close-icon.png"
+                alt="close icon"
+              />
+            </button>
+          </div>
+
+          <div class="form__camera">
+            <img
+              class="form__camera-icon"
+              src="./assets/images/icons/create-invoice-modal-icons/camera-icon.svg"
+              alt="picture icon"
+            />
+          </div>
+
+          <div class="form-grid">
+            <div class="form__group">
+              <label class="form__group-label">Invoice ID</label>
+              <input class="form__group-input" type="text" placeholder="#876370" />
+            </div>
+            <div class="form__group">
+              <label class="form__group-label">Date</label>
+              <input class="form__group-input" type="date" />
+            </div>
+            <div class="form__group">
+              <label class="form__group-label">Name</label>
+              <input class="form__group-input" type="text" placeholder="Alison G." />
+            </div>
+            <div class="form__group">
+              <label class="form__group-label">Email</label>
+              <input class="form__group-input" type="email" placeholder="example@gmail.com" />
+            </div>
+            <div class="form__group">
+              <label class="form__group-label">Address</label>
+              <div class="form__group-address">
+                <input class="form__group-input" type="text" placeholder="Street" />
+                <img
+                  class="form__group-address-icon"
+                  src="./assets/images/icons/create-invoice-modal-icons/location-icon.svg"
+                  alt="location icon"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="product-list">
+            <div class="product-list__title">
+              <h4 class="product-list__title-text">Product Description</h4>
+              <button
+                class="btn product-list__action-buttons product-list__action-button--button-add"
+              >
+                +
+              </button>
+            </div>
+            <table class="product-list__table">
+              <thead class="product-list__table-head">
+                <tr class="product-list__table-row">
+                  <th class="product-list__header">Product Name</th>
+                  <th class="product-list__header">Rate</th>
+                  <th class="product-list__header">Qty</th>
+                  <th class="product-list__header">Amount</th>
+                  <th class="product-list__header"></th>
+                </tr>
+              </thead>
+              <tbody class="product-list__table-body">
+                <tr class="product-list__table-row">
+                  <td class="product-list__cell">iPod 2021</td>
+                  <td class="product-list__cell">$1000</td>
+                  <td class="product-list__cell">10 Pcs</td>
+                  <td class="product-list__cell">$10,000</td>
+                  <td class="product-list__cell">
+                    <button
+                      class="btn product-list__action-buttons product-list__action-button--button-delete"
+                    >
+                      <img
+                        class="delete-icon"
+                        src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg"
+                        alt="delete icon"
+                      />
+                    </button>
+                  </td>
+                </tr>
+                <tr class="product-list__table-row">
+                  <td class="product-list__cell">iPod 2021</td>
+                  <td class="product-list__cell">$1000</td>
+                  <td class="product-list__cell">10 Pcs</td>
+                  <td class="product-list__cell">$10,000</td>
+                  <td class="product-list__cell">
+                    <button
+                      class="btn product-list__action-buttons product-list__action-button--button-delete"
+                    >
+                      <img
+                        class="delete-icon"
+                        src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg"
+                        alt="delete icon"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="form__action-buttons">
+            <button class="btn form__action-buttons--button-send">Send Invoice</button>
+            <button class="btn form__action-buttons--button-create">Save Changes</button>
           </div>
         </div>
 

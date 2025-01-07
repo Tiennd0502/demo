@@ -43,7 +43,7 @@ class InvoiceView {
           <td class="table__cell" data-label="Status">
             <span class="status status-${invoice.status.toLowerCase()}">${invoice.status}</span>
           </td>
-          <td class="table__cell">
+          <td class="table__cell" data-label="Favorite">
             <img
               src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg"
               alt="favorite icon"
@@ -52,16 +52,16 @@ class InvoiceView {
           </td>
 
           
-          <td class="table__cell table__cell--actions">
+          <td class="table__cell table__cell--actions" data-label="Actions">
             <span>...</span>
-            <button class="btn btn--edit" data-id="${invoice.id}>
+            <button class="btn btn--edit" data-id="${invoice.id}">
               <img
                 src="./assets/images/icons/main-view-icons/edit-icon.svg"
                 alt="edit icon"
               />
               Edit
             </button>
-            <button class="btn btn--delete" data-id="${invoice.id}>
+            <button class="btn btn--delete" data-id="${invoice.id}">
               <img
                 src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg"
                 alt="delete-icon"

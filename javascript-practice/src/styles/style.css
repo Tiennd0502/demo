@@ -346,11 +346,16 @@
 }
 
 .product-list__cell {
+  min-width: 8rem;
   padding: 1rem 0;
   text-align: left;
   border-bottom: 0.1rem solid rgba(3, 2, 41, 0.1);
   font-size: var(--font-size-14);
   font-weight: var(--font-weight-regular);
+}
+
+.product-list__cell input {
+  min-width: 8rem;
 }
 
 .product-list__cell:nth-child(5) {
@@ -522,7 +527,8 @@
   flex-direction: column;
 }
 
-.preview__invoice-label {
+.preview__invoice-label--id,
+.preview__invoice-label--date {
   font-size: 10px;
   font-weight: 400;
   line-height: 13.02px;
@@ -530,7 +536,8 @@
   margin-bottom: 1.5rem;
 }
 
-.preview__invoice-label span {
+.preview__invoice-label--id span,
+.preview__invoice-label--date span {
   font-size: 8px;
   font-weight: 400;
   line-height: 10.42px;

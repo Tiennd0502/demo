@@ -62,6 +62,7 @@ class InvoiceController {
   }
 
   updateAmounts(tbody) {
+    let total = 0;
     // Update amount for each row
     const rows = tbody.querySelectorAll('.product-list__table-row');
     rows.forEach((row) => {
@@ -69,6 +70,7 @@ class InvoiceController {
       const qty = parseInt(row.querySelector('.qty-input').value) || 0;
       const amount = rate * qty;
       row.querySelector('td:nth-child(4)').textContent = `$${amount.toFixed(2)}`;
+      total += amount;
     });
 
     // Update preview if needed
@@ -102,9 +104,8 @@ class InvoiceController {
     const inputs = document.querySelectorAll('.form__group-input');
     inputs.forEach((input) => (input.value = ''));
     document.querySelector('.product-list__table .product-list__table-body').innerHTML =
-      this.getEmptyProductRow();
+      this.addProductRow();
   }
-
   resetFormStates() {
     // Hide all forms first
     document.querySelector('.form--create').classList.add('hidden');
@@ -113,13 +114,13 @@ class InvoiceController {
     document.querySelector('.main').classList.remove('hidden');
   }
 
-  getEmptyProductRow() {
-    return `
+  addProductRow() {
+    const newRow = `
       <tr class="product-list__table-row">
-        <td class="product-list__cell"><input type="text" class="product-input"></td>
-        <td class="product-list__cell"><input type="number" class="rate-input"></td>
-        <td class="product-list__cell"><input type="number" class="qty-input"></td>
-        <td class="product-list__cell">$</td>
+        <td class="product-list__cell"><input type="text" class="product-input"/></td>
+        <td class="product-list__cell"><input type="number" class="rate-input"/></td>
+        <td class="product-list__cell"><input type="number" class="qty-input"/></td>
+        <td class="product-list__cell">$0.00</td>
         <td class="product-list__cell">
           <button class="btn product-list__action-buttons product-list__action-button--button-delete">
             <img
@@ -131,16 +132,14 @@ class InvoiceController {
         </td>
       </tr>
     `;
-  }
-
-  addProductRow() {
     // Find the closest tbody to the clicked add button
     document.querySelectorAll('.form--create, .form--edit').forEach((form) => {
-      const tbody = form.querySelector('.product-list__table .product-list__table-body');
-      if (!tbody.children.length) {
-        tbody.innerHTML = this.getEmptyProductRow();
+      if (!form.classList.contains('hidden')) {
+        const tbody = form.querySelector('.product-list__table .product-list__table-body');
+        tbody.insertAdjacentHTML('beforeend', newRow);
       }
     });
+    this.updateAmounts(document.querySelector('.form:not(.hidden) .product-list__table tbody'));
   }
 
   collectFormData() {
@@ -167,16 +166,12 @@ class InvoiceController {
 
         if (name || rate || quantity) {
           // Only add if any field has a value
-          products.push({ name, rate, quantity });
+          products.push({ name, rate, quantity, amount: rate * quantity });
         }
       }
     });
 
     // Get form fields using more specific selectors
-    const nameInput = activeForm.querySelector('input[placeholder="Alison G."]');
-    const emailInput = activeForm.querySelector('input[placeholder="example@gmail.com"]');
-    const dateInput = activeForm.querySelector('input[type="date"]');
-    const addressInput = activeForm.querySelector('input[placeholder="Street"]');
 
     return {
       id: activeForm.querySelector('input[placeholder="#876370"]')?.value || `INV-${Date.now()}`,

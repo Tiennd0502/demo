@@ -68,9 +68,21 @@ class InvoiceController {
   }
 
   setupProductListHandlers() {
-    const addProductBtn = document.querySelectorAll('.product-list__action-button--button-add');
-    addProductBtn.forEach((btn) => {
-      btn.addEventListener('click', () => this.addProductRow());
+    const addProductBtns = document.querySelectorAll('.product-list__action-button--button-add');
+    addProductBtns.forEach((btn) => {
+      // Remove existing event listeners
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      // Add new event listener
+      newBtn.addEventListener('click', () => {
+        const activeForm = document.querySelector(
+          '.form--create:not(.hidden), .form--edit:not(.hidden)',
+        );
+        if (activeForm) {
+          this.addProductRow(activeForm);
+        }
+      });
     });
 
     const forms = document.querySelectorAll('.form--create, .form--edit');
@@ -172,8 +184,15 @@ class InvoiceController {
   resetForm() {
     const inputs = document.querySelectorAll('.form__group-input');
     inputs.forEach((input) => (input.value = ''));
-    document.querySelector('.product-list__table .product-list__table-body').innerHTML =
-      this.addProductRow();
+
+    // Get the active form and clear its product table
+    const activeForm = document.querySelector(
+      '.form--create:not(.hidden), .form--edit:not(.hidden)',
+    );
+    if (activeForm) {
+      const tbody = activeForm.querySelector('.product-list__table .product-list__table-body');
+      tbody.innerHTML = this.addProductRow(activeForm);
+    }
   }
   resetFormStates() {
     // Hide all forms first
@@ -201,14 +220,14 @@ class InvoiceController {
         </td>
       </tr>
     `;
-    // Find the closest tbody to the clicked add button
-    document.querySelectorAll('.form--create, .form--edit').forEach((form) => {
-      if (!form.classList.contains('hidden')) {
-        const tbody = form.querySelector('.product-list__table .product-list__table-body');
-        tbody.insertAdjacentHTML('beforeend', newRow);
-      }
-    });
-    this.updateAmounts(document.querySelector('.form:not(.hidden) .product-list__table tbody'));
+    const activeForm =
+      document.querySelector('.form--create:not(.hidden)') ||
+      document.querySelector('.form--edit:not(.hidden)');
+    const tbody = activeForm.querySelector('.product-list__table .product-list__table-body');
+    tbody.insertAdjacentHTML('beforeend', newRow);
+    this.updateAmounts(tbody);
+
+    return newRow; // Keep the return for resetForm method
   }
 
   collectFormData() {

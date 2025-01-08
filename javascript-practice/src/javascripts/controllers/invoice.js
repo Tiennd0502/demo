@@ -1,6 +1,7 @@
 import Invoice from '../model/model.js';
 import Templates from '../templates/templates.js';
 import InvoiceView from '../views/view.js';
+import ValidationUtils from '../helpers/validation-utils.js';
 import NotificationUtils from '../helpers/notification-utils.js';
 import * as formHandlers from './form-handlers.js';
 import * as productHandlers from './product-handlers.js';
@@ -20,8 +21,10 @@ class InvoiceController {
   constructor() {
     this.invoice = new Invoice();
     this.view = new InvoiceView();
+    this.validator = new ValidationUtils();
     this.notification = new NotificationUtils();
     this.invoices = [];
+
     this.discountPercentage = 5;
     this.init();
   }
@@ -48,7 +51,21 @@ class InvoiceController {
    * Sets up event listeners for invoice actions, form events, and product list events.
    */
   setupEventListeners() {
-    this.setupInvoiceActions();
+    // Remove any existing listeners first
+    const existingInvoiceList = this.view.invoiceList;
+    const newInvoiceList = existingInvoiceList.cloneNode(true);
+    existingInvoiceList.parentNode.replaceChild(newInvoiceList, existingInvoiceList);
+    this.view.invoiceList = newInvoiceList;
+
+    // Set up new listeners
+    this.view.invoiceList.addEventListener(
+      'click',
+      (e) => {
+        this.handleInvoiceActions(e);
+      },
+      { capture: true },
+    ); // Use capture phase to handle event first
+
     this.setupAddInvoiceButton();
     this.setupSaveChangeButton();
     this.setupPopupMenu();
@@ -63,13 +80,6 @@ class InvoiceController {
     });
 
     productHandlers.setupProductListHandlers(() => this.updatePreview());
-  }
-
-  /**
-   * Sets up event listeners for invoice actions in the invoice list.
-   */
-  setupInvoiceActions() {
-    this.view.invoiceList.addEventListener('click', (e) => this.handleInvoiceActions(e));
   }
 
   /**
@@ -94,11 +104,20 @@ class InvoiceController {
    * Setup event listener to hide popup when user uses specific actions
    */
   setupPopupMenu() {
-    // Close popup when clicking outside
+    // Single event delegation handler for all popups
     document.addEventListener('click', (e) => {
+      // Close any active popups when clicking outside
       if (!e.target.closest('.popup-menu')) {
         const activePopups = document.querySelectorAll('.popup-content.active');
         activePopups.forEach((popup) => popup.classList.remove('active'));
+      }
+
+      // Toggle popup when trigger is clicked
+      if (e.target.closest('.btn-trigger')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const popup = e.target.closest('.table__row').querySelector('.popup-content');
+        popup?.classList.toggle('active');
       }
     });
 
@@ -151,9 +170,6 @@ class InvoiceController {
       const checkedRows = this.tableBody.querySelectorAll('.table__checkbox:checked');
       await this.handleInvoiceDeletion(Array.from(checkedRows));
     });
-
-    // Listen for individual delete button clicks using event delegation
-    this.tableBody?.addEventListener('click', async (e) => await this.handleInvoiceDeletion(e));
   }
 
   /**
@@ -191,7 +207,6 @@ class InvoiceController {
           this.invoices = this.invoices.filter((invoice) => invoice.id !== id);
         });
         this.headerCheckbox.checked = false;
-
         this.notification.show('Invoice deleted successfully', { type: 'success' });
       }
     } else {
@@ -200,10 +215,10 @@ class InvoiceController {
       if (!deleteBtn) return;
 
       const invoiceId = deleteBtn.dataset.id;
+
       const confirmed = await this.confirmDeletion(1, invoiceId);
       if (confirmed) {
         this.invoices = this.invoices.filter((invoice) => invoice.id !== invoiceId);
-
         this.notification.show('Invoice deleted successfully', { type: 'success' });
       }
     }
@@ -234,11 +249,22 @@ class InvoiceController {
     if (!formData || !formHandlers.validateFormData(formData)) return;
 
     const products = productHandlers.collectProductData();
-    if (products.length === 0) {
-      this.notification.alert('Please add at least one product', { type: 'warning' });
+
+    // Validate complete invoice data
+    const validation = this.validator.validateCompleteInvoice({
+      ...formData,
+      products,
+    });
+
+    if (!validation.isValid) {
+      const errorMessages = this.validator.formatValidationErrors(validation.errors);
+      errorMessages.forEach((message) => {
+        this.notification.alert(message, { type: 'error' });
+      });
       return;
     }
 
+    // Proceed with adding invoice if validation passes
     const invoice = new Invoice(
       formData.id,
       formData.name,
@@ -253,6 +279,7 @@ class InvoiceController {
     this.view.renderInvoiceList(this.invoices);
     this.view.renderInvoicePreview(invoice);
     formHandlers.resetFormStates();
+    this.notification.show('Invoice created successfully', { type: 'success' });
   }
 
   /**
@@ -269,29 +296,29 @@ class InvoiceController {
 
     const id = idCell.textContent;
 
-    // Handle popup trigger click
-    if (e.target.classList.contains('btn-trigger')) {
+    // Handle delete button click
+    if (e.target.closest('.btn--delete')) {
+      e.preventDefault();
       e.stopPropagation();
-      const popups = document.querySelector('.popup-content');
-      popups.addEventListener('click', () => {
-        popups.classList.toggle('active');
-      });
 
+      const popupContent = e.target.closest('.popup-content');
+      await this.handleInvoiceDeletion(e);
+      if (popupContent) {
+        popupContent.classList.remove('active');
+      }
       return;
     }
 
-    // Handle popup menu item clicks
-    if (e.target.closest('.btn--edit, .btn--delete')) {
+    // Handle edit button click
+    if (e.target.closest('.btn--edit')) {
+      e.preventDefault();
       e.stopPropagation();
+      this.editInvoice(id);
       const popupContent = e.target.closest('.popup-content');
-
-      if (e.target.closest('.btn--delete')) {
-        await this.handleInvoiceDeletion(e);
-      } else if (e.target.closest('.btn--edit')) {
-        this.editInvoice(id);
+      if (popupContent) {
+        popupContent.classList.remove('active');
       }
-
-      popupContent.classList.remove('active');
+      return;
     }
   }
 
@@ -332,14 +359,23 @@ class InvoiceController {
    */
   saveChanges() {
     const formData = formHandlers.collectFormData();
-    if (!formData || !formHandlers.validateFormData(formData)) return;
-
     const products = productHandlers.collectProductData();
-    if (products.length === 0) {
-      this.notification.alert('Please add at least one product', { type: 'warning' });
+
+    // Validate complete invoice data
+    const validation = this.validator.validateCompleteInvoice({
+      ...formData,
+      products,
+    });
+
+    if (!validation.isValid) {
+      const errorMessages = this.validator.formatValidationErrors(validation.errors);
+      errorMessages.forEach((message) => {
+        this.notification.alert(message, { type: 'error' });
+      });
       return;
     }
 
+    // Proceed with saving changes if validation passes
     const index = this.invoices.findIndex((inv) => inv.id === formData.id);
     if (index === -1) return;
 
@@ -355,7 +391,7 @@ class InvoiceController {
 
     this.view.renderInvoiceList(this.invoices);
     this.view.renderInvoicePreview(this.invoices[index]);
-    this.notification.alert('Invoice edited successfully', { type: 'success' });
+    this.notification.show('Invoice updated successfully', { type: 'success' });
     formHandlers.resetFormStates();
   }
 

@@ -50,6 +50,7 @@ class InvoiceController {
     this.setupAddInvoiceButton();
     this.setupSaveChangeButton();
     this.setupPopupMenu();
+    this.setupMultipleInvoiceDeletion();
 
     formHandlers.setupFormEventListeners((newDiscount) => {
       this.discountPercentage = newDiscount;
@@ -87,6 +88,9 @@ class InvoiceController {
       .addEventListener('click', () => this.saveChanges());
   }
 
+  /**
+   * Setup event listener to hide popup when user uses specific actions
+   */
   setupPopupMenu() {
     // Close popup when clicking outside
     document.addEventListener('click', (e) => {
@@ -103,6 +107,94 @@ class InvoiceController {
         activePopups.forEach((popup) => popup.classList.remove('active'));
       }
     });
+  }
+
+  /**
+   *  Confirmation dialog for deleting invoices.
+   * @param {number} count - The number of invoices to delete.
+   * @param {string} [id=null] - The ID of the single invoice to delete (optional).
+   * @returns {boolean} True if the user confirms the deletion, false otherwise.
+   */
+  confirmDeletion(count, id = null) {
+    const message =
+      count > 1
+        ? `Are you sure you want to delete ${count} selected invoice(s)?`
+        : `Are you sure you want to delete invoice #${id}?`;
+    return confirm(message);
+  }
+
+  /**
+   * Sets up event listeners for handling multiple invoice deletions.
+   * This includes:
+   * - Listening for changes to the header checkbox to select/deselect all invoices.
+   * - Listening for clicks on the multiple deletion icon to delete selected invoices.
+   * - Listening for individual delete button clicks using event delegation.
+   */
+  setupMultipleInvoiceDeletion() {
+    this.tableBody = document.querySelector('.table__body');
+    this.headerCheckbox = document.querySelector('.table__head .checkbox');
+    this.deleteIcon = document.querySelector('.table__delete-icon');
+
+    // Listen for header checkbox changes
+    this.headerCheckbox?.addEventListener('change', this.handleHeaderCheckboxChange.bind(this));
+
+    // Listen for bulk delete icon clicks
+    this.deleteIcon?.addEventListener('click', () => {
+      const checkedRows = this.tableBody.querySelectorAll('.table__checkbox:checked');
+      this.handleInvoiceDeletion(Array.from(checkedRows));
+    });
+
+    // Listen for individual delete button clicks using event delegation
+    this.tableBody?.addEventListener('click', this.handleInvoiceDeletion.bind(this));
+  }
+
+  /**
+   * Selects all checkbox invoice when users choose header checkbox
+   */
+  handleHeaderCheckboxChange(event) {
+    const isChecked = event.target.checked;
+    const rowCheckboxes = this.tableBody.querySelectorAll('.table__checkbox');
+
+    rowCheckboxes.forEach((checkbox) => {
+      checkbox.checked = isChecked;
+    });
+  }
+
+  /**
+   * Handle deletion of invoices, for single or multiple invoice at same time
+   * @param {Event,Array} identifier - event for single deletion or array of checkboxes for multiple deletion
+   */
+  handleInvoiceDeletion(identifier) {
+    // Handle both multiple deletion and single deletion cases
+    if (Array.isArray(identifier)) {
+      // Multiple deletion
+      if (identifier.length === 0) {
+        alert('Please select at least one invoice to delete');
+        return;
+      }
+
+      if (this.confirmDeletion(identifier.length)) {
+        identifier.forEach((checkbox) => {
+          const row = checkbox.closest('.table__row');
+          const id = row.querySelector('.btn--delete').dataset.id;
+          this.invoices = this.invoices.filter((invoice) => invoice.id !== id);
+        });
+        this.headerCheckbox.checked = false;
+      }
+    } else {
+      // Single deletion
+      const deleteBtn = identifier.target.closest('.btn--delete');
+      if (!deleteBtn) return;
+
+      const invoiceId = deleteBtn.dataset.id;
+      if (this.confirmDeletion(1, invoiceId)) {
+        this.invoices = this.invoices.filter((invoice) => invoice.id !== invoiceId);
+      }
+    }
+
+    // Update view after any type of deletion
+    this.view.renderInvoiceList(this.invoices);
+    this.updateHeaderCheckbox();
   }
 
   /**
@@ -178,7 +270,7 @@ class InvoiceController {
       const popupContent = e.target.closest('.popup-content');
 
       if (e.target.closest('.btn--delete')) {
-        this.deleteInvoice(id);
+        this.handleInvoiceDeletion(id);
       } else if (e.target.closest('.btn--edit')) {
         this.editInvoice(id);
       }
@@ -188,14 +280,14 @@ class InvoiceController {
   }
 
   /**
-   * Deletes an invoice by its ID after confirming with the user
-   * @param {string} id - the ID of the invoice to delete
+   * Update the state of the header checkbox base on the individual checkboxes
+   * If all checkboxes are checked, header checkbox will be checked and vice versa
    */
-  deleteInvoice(id) {
-    if (confirm('Are you sure you want to delete this invoice?')) {
-      this.invoices = this.invoices.filter((invoice) => invoice.id !== id);
-      this.view.renderInvoiceList(this.invoices);
-    }
+  updateHeaderCheckbox() {
+    const totalRows = this.tableBody.querySelectorAll('.table__checkbox').length;
+    const checkedRows = this.tableBody.querySelectorAll(`${'.table__checkbox'}:checked`).length;
+
+    this.headerCheckbox.checked = totalRows > 0 && totalRows === checkedRows;
   }
 
   /**

@@ -187,8 +187,6 @@
 }
 
 .table__cell--actions {
-  position: relative;
-  display: inline-block;
   font-size: var(--font-size-26);
   cursor: pointer;
 }
@@ -196,6 +194,12 @@
 .table__cell--actions:hover {
   opacity: 1;
   color: var(--other-text-color);
+}
+
+.table__delete-icon {
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
 }
 
 .table__user,
@@ -1162,6 +1166,7 @@
   }
 
   .popup-content {
+    display: flex;
     position: static;
     width: 100%;
     flex-direction: row;
@@ -1169,6 +1174,7 @@
     border: none;
     box-shadow: none;
     padding: 0 1rem;
+    gap: 1rem;
   }
 
   .btn--edit,
@@ -1177,6 +1183,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
   }
 }
 

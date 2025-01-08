@@ -1,3 +1,4 @@
+import NotificationUtils from '../helpers/notification-utils.js';
 /**
  * Setup event listener for any form related actions
  * @param {Function} onDiscountChange - callback function to handle discount input changes
@@ -146,7 +147,10 @@ export function setFormData(invoice, discountPercentage) {
  */
 export function validateFormData(data) {
   if (!data.name || !data.email || !data.date) {
-    alert('Please fill in all required fields and add at least one product');
+    new NotificationUtils().alert(
+      'Please fill in all required fields and add at least one product',
+      { type: 'warning' },
+    );
     return false;
   }
   return true;

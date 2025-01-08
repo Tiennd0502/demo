@@ -1,6 +1,7 @@
 import Invoice from '../model/model.js';
 import Templates from '../templates/templates.js';
 import InvoiceView from '../views/view.js';
+import NotificationUtils from '../helpers/notification-utils.js';
 import * as formHandlers from './form-handlers.js';
 import * as productHandlers from './product-handlers.js';
 
@@ -19,6 +20,7 @@ class InvoiceController {
   constructor() {
     this.invoice = new Invoice();
     this.view = new InvoiceView();
+    this.notification = new NotificationUtils();
     this.invoices = [];
     this.discountPercentage = 5;
     this.init();
@@ -115,12 +117,18 @@ class InvoiceController {
    * @param {string} [id=null] - The ID of the single invoice to delete (optional).
    * @returns {boolean} True if the user confirms the deletion, false otherwise.
    */
-  confirmDeletion(count, id = null) {
+  async confirmDeletion(count, id = null) {
     const message =
       count > 1
         ? `Are you sure you want to delete ${count} selected invoice(s)?`
         : `Are you sure you want to delete invoice #${id}?`;
-    return confirm(message);
+
+    return await this.notification.confirm(message, {
+      type: 'warning',
+      title: 'Delete Invoice',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
   }
 
   /**
@@ -169,7 +177,9 @@ class InvoiceController {
     if (Array.isArray(identifier)) {
       // Multiple deletion
       if (identifier.length === 0) {
-        alert('Please select at least one invoice to delete');
+        this.notification.alert('Please select at least one invoice to delete', {
+          type: 'warning',
+        });
         return;
       }
 
@@ -219,7 +229,7 @@ class InvoiceController {
 
     const products = productHandlers.collectProductData();
     if (products.length === 0) {
-      alert('Please add at least one product');
+      this.notification.alert('Please add at least one product', { type: 'warning' });
       return;
     }
 
@@ -320,7 +330,7 @@ class InvoiceController {
 
     const products = productHandlers.collectProductData();
     if (products.length === 0) {
-      alert('Please add at least one product');
+      this.notification.alert('Please add at least one product', { type: 'warning' });
       return;
     }
 
@@ -339,6 +349,7 @@ class InvoiceController {
 
     this.view.renderInvoiceList(this.invoices);
     this.view.renderInvoicePreview(this.invoices[index]);
+    this.notification.alert('Invoice edited successfully', { type: 'success' });
     formHandlers.resetFormStates();
   }
 

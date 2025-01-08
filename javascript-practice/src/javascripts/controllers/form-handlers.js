@@ -1,19 +1,33 @@
+/**
+ * Setup event listener for any form related actions
+ * @param {Function} onDiscountChange - callback function to handle discount input changes
+ */
 export function setupFormEventListeners(onDiscountChange) {
   setupFormCloseButton();
   setupCreateFormButton();
   setupDiscountInputHandler(onDiscountChange);
 }
 
+/**
+ * Setup event listener for button to close forms
+ */
 export function setupFormCloseButton() {
   document.querySelectorAll('.form__header-close').forEach((btn) => {
     btn.addEventListener('click', () => closeForm());
   });
 }
 
+/**
+ * setup event listener for the create form button
+ */
 export function setupCreateFormButton() {
   document.querySelector('.btn--primary').addEventListener('click', () => showCreateForm());
 }
 
+/**
+ * setup event listener for discount input field
+ * @param {Function} onDiscountChange - callback function to handle input discount changes
+ */
 export function setupDiscountInputHandler(onDiscountChange) {
   const discountInput = document.querySelectorAll('.discount-input');
   discountInput.forEach((input) => {
@@ -24,6 +38,13 @@ export function setupDiscountInputHandler(onDiscountChange) {
   });
 }
 
+/**
+ * Helper methods to show/hide forms
+ *
+ * @param {Object} options - to control which form to show/hide
+ * @param {boolean} options.showCreate - to show create form
+ * @param {boolean} options.showEdit - to show edit form
+ */
 export function toggleForm({ showCreate = false, showEdit = false }) {
   document.querySelector('.main').classList.toggle('hidden', showCreate || showEdit);
   document.querySelector('.content').style.display = showCreate || showEdit ? 'grid' : 'none';
@@ -31,25 +52,41 @@ export function toggleForm({ showCreate = false, showEdit = false }) {
   document.querySelector('.form--edit').classList.toggle('hidden', !showEdit);
 }
 
+/**
+ * Closes the currently open form and resets it.
+ */
 export function closeForm() {
   toggleForm({});
   resetForm();
 }
 
+/**
+ * Shows the create form and resets it.
+ */
 export function showCreateForm() {
   toggleForm({ showCreate: true });
   resetForm();
 }
 
+/**
+ * Shows the edit form and resets it
+ */
 export function showEditForm() {
   toggleForm({ showEdit: true });
   resetForm();
 }
 
+/**
+ * Resets the form states by hiding all forms.
+ */
 export function resetFormStates() {
   toggleForm({});
 }
 
+/**
+ * Resets the form fields to their default states and clears the product list.
+ * @param {Function} onResetForm - Callback function to handle additional reset actions.
+ */
 export function resetForm(onResetForm) {
   const inputs = document.querySelectorAll('.form__group-input');
   inputs.forEach((input) => (input.value = ''));
@@ -62,6 +99,10 @@ export function resetForm(onResetForm) {
   }
 }
 
+/**
+ * Collects form data from active form (create or edit)
+ * @returns {Object} - the collected from data, null if no form is active
+ */
 export function collectFormData() {
   const activeForm =
     document.querySelector('.form--create:not(.hidden)') ||
@@ -79,6 +120,11 @@ export function collectFormData() {
   };
 }
 
+/**
+ * Sets form data for the edit form based on the provided invoice and discount percentage.
+ * @param {Object} invoice - The invoice data to populate the form.
+ * @param {number} discountPercentage - The discount percentage to set in the form.
+ */
 export function setFormData(invoice, discountPercentage) {
   const editForm = document.querySelector('.form--edit');
   editForm.querySelector('input[placeholder="#876370"]').value = invoice.id;
@@ -93,6 +139,11 @@ export function setFormData(invoice, discountPercentage) {
   }
 }
 
+/**
+ * validates the collected form data
+ * @param {Object} - form data to validate
+ * @returns {boolean} - true of form data is valid
+ */
 export function validateFormData(data) {
   if (!data.name || !data.email || !data.date) {
     alert('Please fill in all required fields and add at least one product');

@@ -1,11 +1,18 @@
 import Templates from '../templates/templates.js';
 
+/**
+ * This class handles the rendering of invoices in the view, including the invoice list and invoice preview.
+ */
 class InvoiceView {
   constructor() {
     this.invoiceList = document.querySelector('.table__body');
     this.previewSection = document.querySelector('.preview');
   }
 
+  /**
+   * Renders the list of invoices.
+   * @param {Array[Object]} invoices - An array of invoice objects to render.
+   */
   renderInvoiceList(invoices) {
     this.invoiceList.innerHTML = invoices
       .map((invoice) => {
@@ -20,6 +27,10 @@ class InvoiceView {
       .join('');
   }
 
+  /**
+   * Renders the preview of a single invoice.
+   * @param {Object} invoice - The invoice object to render in the preview.
+   */
   renderInvoicePreview(invoice) {
     this.previewSection.querySelector('.preview__invoice-label--id').innerHTML = `Invoice No: <br/>
       <span>${invoice.id}</span>`;

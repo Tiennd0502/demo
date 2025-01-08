@@ -49,6 +49,7 @@ class InvoiceController {
     this.setupInvoiceActions();
     this.setupAddInvoiceButton();
     this.setupSaveChangeButton();
+    this.setupPopupMenu();
 
     formHandlers.setupFormEventListeners((newDiscount) => {
       this.discountPercentage = newDiscount;
@@ -84,6 +85,24 @@ class InvoiceController {
     document
       .querySelector('.form--edit .form__action-buttons--button-save')
       .addEventListener('click', () => this.saveChanges());
+  }
+
+  setupPopupMenu() {
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.popup-menu')) {
+        const activePopups = document.querySelectorAll('.popup-content.active');
+        activePopups.forEach((popup) => popup.classList.remove('active'));
+      }
+    });
+
+    // Close popup on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const activePopups = document.querySelectorAll('.popup-content.active');
+        activePopups.forEach((popup) => popup.classList.remove('active'));
+      }
+    });
   }
 
   /**
@@ -141,10 +160,30 @@ class InvoiceController {
     if (!idCell) return;
 
     const id = idCell.textContent;
-    if (e.target.closest('.btn--delete')) {
-      this.deleteInvoice(id);
-    } else if (e.target.closest('.btn--edit')) {
-      this.editInvoice(id);
+
+    // Handle popup trigger click
+    if (e.target.classList.contains('btn-trigger')) {
+      e.stopPropagation();
+      const popups = document.querySelector('.popup-content');
+      popups.addEventListener('click', () => {
+        popups.classList.toggle('active');
+      });
+
+      return;
+    }
+
+    // Handle popup menu item clicks
+    if (e.target.closest('.btn--edit, .btn--delete')) {
+      e.stopPropagation();
+      const popupContent = e.target.closest('.popup-content');
+
+      if (e.target.closest('.btn--delete')) {
+        this.deleteInvoice(id);
+      } else if (e.target.closest('.btn--edit')) {
+        this.editInvoice(id);
+      }
+
+      popupContent.classList.remove('active');
     }
   }
 

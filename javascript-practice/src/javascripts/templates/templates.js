@@ -287,16 +287,18 @@ const Templates = {
     <img src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg" alt="favorite icon" class="favorite-icon-inactive" />
   </td>
   <td class="table__cell table__cell--actions" data-label="Actions">
-    <button class="btn-trigger">...</button>
-    <div class="popup-content">
-      <button class="btn btn--edit" data-id="{{id}}">
-        <img src="./assets/images/icons/main-view-icons/edit-icon.svg" alt="edit icon" />
-        Edit
-      </button>
-      <button class="btn btn--delete" data-id="{{id}}">
-        <img src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg" alt="delete-icon" />
-        Delete
-      </button>
+    <div class="popup-menu">
+      <button class="btn-trigger">...</button>
+      <div class="popup-content active">
+        <button class="btn btn--edit" data-id="{{id}}">
+          <img src="./assets/images/icons/main-view-icons/edit-icon.svg" alt="edit icon" />
+          Edit
+        </button>
+        <button class="btn btn--delete" data-id="{{id}}">
+          <img src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg" alt="delete-icon" />
+          Delete
+        </button>
+      </div>
     </div>
   </td>
 </tr>

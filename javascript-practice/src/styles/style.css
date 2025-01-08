@@ -188,11 +188,10 @@
 }
 
 .table__cell--actions {
+  position: relative;
+  display: inline-block;
   font-size: var(--font-size-26);
-  opacity: 0.3;
   cursor: pointer;
-  text-align: center;
-  vertical-align: middle;
 }
 
 .table__cell--actions:hover {
@@ -848,61 +847,6 @@
   opacity: 0.5;
 }
 
-/* Button components */
-.btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  padding-left: 1.5rem;
-  border-radius: 1rem;
-  cursor: pointer;
-  text-align: center;
-  font-size: var(--font-size-16);
-  font-weight: var(--font-weight-medium);
-  line-height: 2.083rem;
-}
-
-.btn--primary {
-  color: white;
-  background-color: var(--primary-button-color);
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-16);
-  line-height: 2.083rem;
-}
-
-.btn--edit {
-  width: 9rem;
-  border-radius: 0.5rem;
-  background-color: rgba(58, 54, 219, 0.05);
-
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 14.63px;
-  color: var(--other-text-color);
-
-  display: none;
-}
-.btn--edit img,
-.btn--delete img {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.btn--delete {
-  width: 9rem;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 105, 180, 0.05);
-
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 14.63px;
-  color: var(--tertiary-text-color);
-  display: none;
-}
-
 .product-list__action-button--button-delete {
   padding: 1rem;
   border-radius: 50%;
@@ -1212,11 +1156,20 @@
   .table__cell--actions {
     opacity: 1;
     display: flex;
-    gap: 1rem;
   }
 
-  .table__cell--actions span {
+  .btn-trigger {
     display: none;
+  }
+
+  .popup-content {
+    position: static;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-evenly;
+    border: none;
+    box-shadow: none;
+    padding: 0 1rem;
   }
 
   .btn--edit,

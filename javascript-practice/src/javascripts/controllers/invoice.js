@@ -147,13 +147,13 @@ class InvoiceController {
     this.headerCheckbox?.addEventListener('change', this.handleHeaderCheckboxChange.bind(this));
 
     // Listen for bulk delete icon clicks
-    this.deleteIcon?.addEventListener('click', () => {
+    this.deleteIcon?.addEventListener('click', async () => {
       const checkedRows = this.tableBody.querySelectorAll('.table__checkbox:checked');
-      this.handleInvoiceDeletion(Array.from(checkedRows));
+      await this.handleInvoiceDeletion(Array.from(checkedRows));
     });
 
     // Listen for individual delete button clicks using event delegation
-    this.tableBody?.addEventListener('click', this.handleInvoiceDeletion.bind(this));
+    this.tableBody?.addEventListener('click', async (e) => await this.handleInvoiceDeletion(e));
   }
 
   /**
@@ -172,7 +172,7 @@ class InvoiceController {
    * Handle deletion of invoices, for single or multiple invoice at same time
    * @param {Event,Array} identifier - event for single deletion or array of checkboxes for multiple deletion
    */
-  handleInvoiceDeletion(identifier) {
+  async handleInvoiceDeletion(identifier) {
     // Handle both multiple deletion and single deletion cases
     if (Array.isArray(identifier)) {
       // Multiple deletion
@@ -183,13 +183,16 @@ class InvoiceController {
         return;
       }
 
-      if (this.confirmDeletion(identifier.length)) {
+      const confirmed = await this.confirmDeletion(identifier.length);
+      if (confirmed) {
         identifier.forEach((checkbox) => {
           const row = checkbox.closest('.table__row');
           const id = row.querySelector('.btn--delete').dataset.id;
           this.invoices = this.invoices.filter((invoice) => invoice.id !== id);
         });
         this.headerCheckbox.checked = false;
+
+        this.notification.show('Invoice deleted successfully', { type: 'success' });
       }
     } else {
       // Single deletion
@@ -197,8 +200,11 @@ class InvoiceController {
       if (!deleteBtn) return;
 
       const invoiceId = deleteBtn.dataset.id;
-      if (this.confirmDeletion(1, invoiceId)) {
+      const confirmed = await this.confirmDeletion(1, invoiceId);
+      if (confirmed) {
         this.invoices = this.invoices.filter((invoice) => invoice.id !== invoiceId);
+
+        this.notification.show('Invoice deleted successfully', { type: 'success' });
       }
     }
 
@@ -254,7 +260,7 @@ class InvoiceController {
    *
    * @param {Event} e - The event object.
    */
-  handleInvoiceActions(e) {
+  async handleInvoiceActions(e) {
     const row = e.target.closest('.table__row');
     if (!row) return;
 
@@ -280,7 +286,7 @@ class InvoiceController {
       const popupContent = e.target.closest('.popup-content');
 
       if (e.target.closest('.btn--delete')) {
-        this.handleInvoiceDeletion(id);
+        await this.handleInvoiceDeletion(e);
       } else if (e.target.closest('.btn--edit')) {
         this.editInvoice(id);
       }

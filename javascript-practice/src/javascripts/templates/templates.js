@@ -258,6 +258,77 @@ const Templates = {
     </div>
   </div>
 `,
+  invoiceTemplate: `
+<tr class="table__row">
+  <td class="table__cell"><input type="checkbox" class="table__checkbox" /></td>
+  <td class="table__cell" data-label="Invoice Id">{{id}}</td>
+  <td class="table__cell" data-label="Name">
+    <div class="table__user">
+      <img class="table__user-avatar" src="./assets/images/recipient-image.png" alt="avatar" />
+      <span class="table__user-name">{{name}}</span>
+    </div>
+  </td>
+  <td class="table__cell" data-label="Email">
+    <div class="table__user-email">
+      <img src="./assets/images/icons/main-view-icons/email-icon.svg" alt="email icon" />
+      <span class="table__user-email-text">{{email}}</span>
+    </div>
+  </td>
+  <td class="table__cell" data-label="Date">
+    <div class="table__date">
+      <img class="table__date-icon" src="./assets/images/icons/main-view-icons/date-icon.svg" alt="date icon" />
+      <span class="table__date-text">{{date}}</span>
+    </div>
+  </td>
+  <td class="table__cell" data-label="Status">
+    <span class="status status-{{statusLower}}">{{status}}</span>
+  </td>
+  <td class="table__cell" data-label="Favorite">
+    <img src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg" alt="favorite icon" class="favorite-icon-inactive" />
+  </td>
+  <td class="table__cell table__cell--actions" data-label="Actions">
+    <span>...</span>
+    <button class="btn btn--edit" data-id="{{id}}">
+      <img src="./assets/images/icons/main-view-icons/edit-icon.svg" alt="edit icon" />
+      Edit
+    </button>
+    <button class="btn btn--delete" data-id="{{id}}">
+      <img src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg" alt="delete-icon" />
+      Delete
+    </button>
+  </td>
+</tr>
+`,
+  addProductRowTemplate: `
+<tr class="product-list__table-row">
+  <td class="product-list__cell"><input type="text" class="product-input"/></td>
+  <td class="product-list__cell"><input type="number" class="rate-input"/></td>
+  <td class="product-list__cell"><input type="number" class="qty-input"/></td>
+  <td class="product-list__cell">$0.00</td>
+  <td class="product-list__cell">
+    <button class="btn product-list__action-buttons product-list__action-button--button-delete">
+      <img
+        class="delete-icon"
+        src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg"
+        alt="delete icon"
+      />
+    </button>
+  </td>
+</tr>
+`,
+  addProductPriceCalculation: (product) => `
+<tr class="product-list__table-row">
+  <td class="product-list__cell"><input type="text" class="product-input" value="${product.name}"></td>
+  <td class="product-list__cell"><input type="number" class="rate-input" value="${product.rate}"></td>
+  <td class="product-list__cell"><input type="number" class="qty-input" value="${product.quantity}"></td>
+  <td class="product-list__cell">$${(product.rate * product.quantity).toFixed(2)}</td>
+  <td class="product-list__cell">
+    <button class="btn product-list__action-buttons product-list__action-button--button-delete">
+      <img src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg" alt="delete icon" class="delete-icon">
+    </button>
+  </td>
+</tr>
+`,
 };
 
 export default Templates;

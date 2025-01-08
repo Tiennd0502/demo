@@ -209,23 +209,7 @@ class InvoiceController {
   }
 
   addProductRow() {
-    const newRow = `
-      <tr class="product-list__table-row">
-        <td class="product-list__cell"><input type="text" class="product-input"/></td>
-        <td class="product-list__cell"><input type="number" class="rate-input"/></td>
-        <td class="product-list__cell"><input type="number" class="qty-input"/></td>
-        <td class="product-list__cell">$0.00</td>
-        <td class="product-list__cell">
-          <button class="btn product-list__action-buttons product-list__action-button--button-delete">
-            <img
-              class="delete-icon"
-              src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg"
-              alt="delete icon"
-            />
-          </button>
-        </td>
-      </tr>
-    `;
+    const newRow = Templates.addProductRowTemplate;
     const activeForm = document.querySelector(
       '.form--create:not(.hidden), .form--edit:not(.hidden)',
     );
@@ -357,21 +341,7 @@ class InvoiceController {
     const tbody = editForm.querySelector('.product-list__table .product-list__table-body');
     tbody.innerHTML = '';
     tbody.innerHTML = invoice.products
-      .map(
-        (product) => `
-      <tr class="product-list__table-row">
-        <td class="product-list__cell"><input type="text" class="product-input" value="${product.name}"></td>
-        <td class="product-list__cell"><input type="number" class="rate-input" value="${product.rate}"></td>
-        <td class="product-list__cell"><input type="number" class="qty-input" value="${product.quantity}"></td>
-        <td class="product-list__cell">$${product.rate * product.quantity.toFixed(2)}</td>
-        <td class="product-list__cell">
-          <button class="btn product-list__action-buttons product-list__action-button--button-delete">
-            <img src="./assets/images/icons/create-invoice-modal-icons/Delete-icon.svg" alt="delete icon" class="delete-icon">
-          </button>
-        </td>
-      </tr>
-    `,
-      )
+      .map((product) => Templates.addProductPriceCalculation(product))
       .join('');
 
     // Update totals

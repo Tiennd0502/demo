@@ -116,7 +116,7 @@ export function collectFormData() {
     email: activeForm.querySelector('input[type="email"]')?.value || '',
     date: activeForm.querySelector('input[type="date"]')?.value || '',
     address: activeForm.querySelector('input[placeholder="Street"]')?.value || '',
-    status: 'Pending',
+    status: activeForm.querySelector('#status').value,
   };
 }
 
@@ -132,6 +132,7 @@ export function setFormData(invoice, discountPercentage) {
   editForm.querySelector('input[type="email"]').value = invoice.email;
   editForm.querySelector('input[type="date"]').value = invoice.date;
   editForm.querySelector('input[placeholder="Street"]').value = invoice.address;
+  editForm.querySelector('#status').value = invoice.status;
 
   const discountInput = editForm.querySelector('.discount-input');
   if (discountInput) {

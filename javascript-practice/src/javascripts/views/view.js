@@ -1,4 +1,5 @@
 import Templates from '../templates/templates.js';
+import InvoiceController from '../controllers/invoice.js';
 
 /**
  * This class handles the rendering of invoices in the view, including the invoice list and invoice preview.

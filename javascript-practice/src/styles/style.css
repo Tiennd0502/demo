@@ -181,6 +181,12 @@
   border-radius: 2.25rem;
 }
 
+.favorite-icon-inactive {
+  min-width: 2rem;
+  min-height: 2rem;
+  cursor: pointer;
+}
+
 .table__checkbox {
   width: 16px;
   height: 16px;
@@ -284,6 +290,10 @@
   gap: 0.5rem;
 }
 
+.form__group:nth-child(2) {
+  justify-content: space-between;
+}
+
 .form__group:nth-child(5) {
   grid-column: 1 / -1;
 }
@@ -295,9 +305,38 @@
 
   border-radius: 1rem;
 }
+.form__group-date {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--secondary-bg-color);
+  padding-right: 1.5rem;
+  border-radius: 1rem;
+}
 
+.form__group-date .form__group-input {
+  margin-top: 0;
+}
 .form__group:nth-child(5) .form__group-input {
   flex: 1;
+}
+
+.form__group:nth-child(2) .form__group-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  height: auto;
+  width: auto;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+}
+
+.form__group:nth-child(2) .form__group-input {
+  flex: 1;
+  position: relative;
 }
 
 .form__group-address-icon {
@@ -329,6 +368,28 @@
 .form__group-input:focus {
   outline: none;
   border-color: var(--primary-color);
+}
+
+.form__group-input--select {
+  appearance: none;
+  background-image: url('../assets/images/icons/create-invoice-modal-icons/down-arrow-icon.png');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.form__group-input--select:focus {
+  outline: none;
+  border-color: var(--secondary-button-color);
+  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.1);
+}
+
+/* Style the dropdown options */
+.form__group-input--select option {
+  padding: 8px;
+  font-size: 1.2rem;
 }
 
 .product-list {
@@ -1103,7 +1164,7 @@
   /* Style cells as flex items */
   .table__cell {
     display: flex;
-    padding: 12px 0;
+    padding: 1rem;
     border-bottom: 1px solid #eee;
   }
 

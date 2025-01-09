@@ -19,7 +19,14 @@ const Templates = {
       </div>
       <div class="form__group">
         <label class="form__group-label">Date</label>
-        <input class="form__group-input" type="date" />
+        <div class="form__group-date">
+          <input class="form__group-input" type="date" />
+          <img 
+            class="form__group-date-icon"
+            src="./assets/images/icons/create-invoice-modal-icons/calendar-icon.svg" 
+            alt="Date icon"
+          />
+        </div>
       </div>
       <div class="form__group">
         <label class="form__group-label">Name</label>
@@ -35,6 +42,14 @@ const Templates = {
           <input class="form__group-input" type="text" placeholder="Street" />
           <img class="form__group-address-icon" src="./assets/images/icons/create-invoice-modal-icons/location-icon.svg" alt="location icon" />
         </div>
+      </div>
+      <div class="form__group">
+        <label for="status" class="form__group-label">Status</label>
+        <select id="status" name="status" class="form__group-input form__group-input--select">
+          <option value="Pending">Pending</option>
+          <option value="Complete">Completed</option>
+          <option value="Cancel">Cancel</option>
+        </select>
       </div>
     </div>
 
@@ -232,7 +247,11 @@ const Templates = {
     <span class="status status-{{statusLower}}">{{status}}</span>
   </td>
   <td class="table__cell" data-label="Favorite">
-    <img src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg" alt="favorite icon" class="favorite-icon-inactive" />
+    <img 
+      alt="favorite icon" 
+      class="favorite-icon-inactive"
+      src="./assets/images/icons/main-view-icons/favorite-icon-inactive.svg" 
+    />
   </td>
   <td class="table__cell table__cell--actions" data-label="Actions">
     <div class="popup-menu">

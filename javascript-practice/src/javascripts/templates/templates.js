@@ -117,7 +117,7 @@ const Templates = {
       <div class="preview__customer-logo">J</div>
       <div class="preview__customer-info">
         <div class="preview__customer-email">
-          @ <span class="email-address">your.mail@gmail.com</span>
+          &#64; <span class="email-address">your.mail@gmail.com</span>
         </div>
         <div class="preview__customer-phone">
           m <span class="phone-number">+388 953 217 3815</span>
@@ -134,7 +134,7 @@ const Templates = {
             <p class="recipient__address"></p>
           </div>
           <div class="preview-company__info">
-            <div class="preview-company__email">@ <span class="email-address"> </span></div>
+            <div class="preview-company__email">&#64; <span class="email-address"> </span></div>
             <div class="preview-company__phone">
               m <span class="phone-number"> +386 714 505 8385</span>
             </div>
@@ -169,15 +169,15 @@ const Templates = {
   <div class="preview-summary">
     <div class="preview-summary__row">
       <span class="preview-summary__label">Subtotal:</span>
-      <span class="preview-summary__value">$</span>
+      <span class="preview-summary__value">&#36;</span>
     </div>
     <div class="preview-summary__row">
-      <span class="preview-summary__label">Discount (5%):</span>
-      <span class="preview-summary__value">$</span>
+      <span class="preview-summary__label">Discount (5&#37;):</span>
+      <span class="preview-summary__value">&#36;</span>
     </div>
     <div class="preview-summary__row preview-summary__total">
       <span class="preview-summary__label">Total:</span>
-      <span class="preview-summary__value">$</span>
+      <span class="preview-summary__value">&#36;</span>
     </div>
   </div>
 
@@ -208,7 +208,7 @@ const Templates = {
       </div>
       <div class="preview__customer-info">
         <div class="preview__customer-email">
-          @ <span class="email-address">your.mail@gmail.com</span>
+          &#64; <span class="email-address">your.mail@gmail.com</span>
         </div>
         <div class="preview__customer-phone">
           m <span class="phone-number">+388 953 217 3815</span>

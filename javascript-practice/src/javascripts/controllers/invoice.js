@@ -169,7 +169,9 @@ class InvoiceController {
     this.headerCheckbox?.addEventListener('change', this.handleHeaderCheckboxChange.bind(this));
 
     // Listen for bulk delete icon clicks
-    this.deleteIcon?.addEventListener('click', async () => {
+    this.deleteIcon?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const checkedRows = this.tableBody.querySelectorAll('.table__checkbox:checked');
       await this.handleInvoiceDeletion(Array.from(checkedRows));
     });

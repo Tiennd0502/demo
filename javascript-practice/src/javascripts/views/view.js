@@ -17,13 +17,20 @@ class InvoiceView {
   renderInvoiceList(invoices) {
     this.invoiceList.innerHTML = invoices
       .map((invoice) => {
+        const favoriteClass = invoice.favorite ? 'favorite-icon-active' : 'favorite-icon-inactive';
+        const favoriteIconSrc = invoice.favorite
+          ? './assets/images/icons/main-view-icons/favorite-icon-active.svg'
+          : './assets/images/icons/main-view-icons/favorite-icon-inactive.svg';
+
         return Templates.invoiceTemplate
           .replace(/{{id}}/g, invoice.id)
           .replace(/{{name}}/g, invoice.name)
           .replace(/{{email}}/g, invoice.email)
           .replace(/{{date}}/g, invoice.date)
           .replace(/{{status}}/g, invoice.status)
-          .replace(/{{statusLower}}/g, invoice.status.toLowerCase());
+          .replace('favorite-icon-inactive', favoriteClass)
+          .replace(/{{statusLower}}/g, invoice.status.toLowerCase())
+          .replace(/favorite-icon-inactive\.svg/, favoriteIconSrc.split('/').pop());
       })
       .join('');
   }

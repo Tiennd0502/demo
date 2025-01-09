@@ -37,6 +37,7 @@ class InvoiceController {
     this.setupSortHandlers();
     this.setupSearchInvoice();
     this.setupEventListeners();
+    this.setupFavoriteHandler();
   }
 
   /**
@@ -485,7 +486,10 @@ class InvoiceController {
 
     tableHeaders.forEach((header) => {
       header.addEventListener('click', (e) => {
-        e.stopPropagation();
+        // Close any open popups when sorting
+        const activePopups = document.querySelectorAll('.popup-content.active');
+        activePopups.forEach((popup) => popup.classList.remove('active'));
+
         const field = header.getAttribute('data-field');
         if (!field) return;
 
@@ -548,6 +552,31 @@ class InvoiceController {
       return 0;
     });
     return sortedInvoices;
+  }
+
+  setupFavoriteHandler() {
+    this.view.invoiceList.addEventListener('click', (e) => {
+      const favoriteIcon = e.target.closest('.favorite-icon-inactive, .favorite-icon-active');
+      //Toggle favorite state
+      if (!favoriteIcon) return;
+      const isActive = favoriteIcon.classList.contains('favorite-icon-active');
+      const row = favoriteIcon.closest('.table__row');
+      const invoiceId = row.querySelector('[data-label="Invoice Id"]').textContent;
+
+      //Update icon src and classname
+      favoriteIcon.src = isActive
+        ? './assets/images/icons/main-view-icons/favorite-icon-inactive.svg'
+        : './assets/images/icons/main-view-icons/favorite-icon-active.svg';
+
+      favoriteIcon.classList.toggle('favorite-icon-inactive', isActive);
+      favoriteIcon.classList.toggle('favorite-icon-active', !isActive);
+
+      //Update invoice data
+      const invoice = this.invoices.find((inv) => inv.id === invoiceId);
+      if (invoice) {
+        invoice.favorite = !isActive;
+      }
+    });
   }
 }
 

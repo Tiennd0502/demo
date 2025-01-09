@@ -181,9 +181,10 @@
   border-radius: 2.25rem;
 }
 
-.favorite-icon-inactive {
-  min-width: 2rem;
-  min-height: 2rem;
+.favorite-icon-inactive,
+.favorite-icon-active {
+  width: 2rem;
+  height: 2rem;
   cursor: pointer;
 }
 

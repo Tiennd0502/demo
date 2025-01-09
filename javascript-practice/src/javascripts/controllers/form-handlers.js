@@ -74,7 +74,6 @@ export function showCreateForm() {
  */
 export function showEditForm() {
   toggleForm({ showEdit: true });
-  resetForm();
 }
 
 /**

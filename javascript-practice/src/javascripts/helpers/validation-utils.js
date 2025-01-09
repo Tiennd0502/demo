@@ -1,7 +1,7 @@
 class ValidationUtils {
   constructor() {
     this.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    this.invoiceIdRegex = /^#?\d{6}$/;
+    this.invoiceIdRegex = /^#?\d{6,}$/;
   }
 
   /**
@@ -16,7 +16,7 @@ class ValidationUtils {
     if (!formData.id) {
       errors.id = 'Invoice ID is required';
     } else if (!this.invoiceIdRegex.test(formData.id)) {
-      errors.id = 'Invoice ID must be a 6-digit number with optional # prefix';
+      errors.id = 'Invoice ID must have at least 6-digit number with optional # prefix';
     }
 
     // Validate Name
@@ -90,7 +90,7 @@ class ValidationUtils {
     // Validate Quantity
     if (!product.quantity && product.quantity !== 0) {
       errors.quantity = 'Quantity is required';
-    } else if (!Number.isInteger(Number(product.quantity))) {
+    } else if (!Number.isInteger(product.quantity)) {
       errors.quantity = 'Quantity must be a whole number';
     } else if (product.quantity < 1) {
       errors.quantity = 'Quantity must be at least 1';

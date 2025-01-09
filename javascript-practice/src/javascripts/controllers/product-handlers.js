@@ -16,6 +16,7 @@ export function setupAddProductButtons() {
   const addProductBtns = document.querySelectorAll('.product-list__action-button--button-add');
   addProductBtns.forEach((btn) => {
     const newBtn = btn.cloneNode(true);
+    newBtn.replaceWith(newBtn.cloneNode(true));
     btn.parentNode.replaceChild(newBtn, btn);
     newBtn.addEventListener('click', () => handleAddProduct());
   });
@@ -26,6 +27,7 @@ export function setupAddProductButtons() {
  * @param {Function} onAmountsUpdate - Callback function to handle updates to amounts.
  */
 export function setupProductTableListeners(onAmountsUpdate) {
+  console.log('Setting up product table listeners');
   const forms = document.querySelectorAll('.form--create, .form--edit');
   forms.forEach((form) => {
     const tbody = form.querySelector('.product-list__table tbody');
@@ -79,11 +81,7 @@ export function handleAddProduct() {
  */
 export function handleDeleteProduct(e, tbody, onAmountsUpdate) {
   const row = e.target.closest('tr');
-  if (tbody.children.length > 1) {
-    row.remove();
-  } else {
-    row.querySelectorAll('input').forEach((input) => (input.value = ''));
-  }
+  row.remove(); // Remove the row
   updateAmounts(tbody, onAmountsUpdate);
 }
 
@@ -107,7 +105,21 @@ export function updateAmounts(tbody, onAmountsUpdate, discountPercentage = 5) {
   updateRowAmounts(rows);
   const { subtotal, discountAmount, total } = calculateTotals(rows, discountPercentage);
   updatePreviewTotals(subtotal, discountAmount, total);
+  if (rows.length === 0) {
+    clearPreviewProducts();
+  }
+
   onAmountsUpdate?.();
+}
+
+/**
+ * Clears the products from the preview section
+ */
+function clearPreviewProducts() {
+  const previewProducts = document.querySelector('.preview-product-list');
+  if (previewProducts) {
+    previewProducts.innerHTML = '';
+  }
 }
 
 /**

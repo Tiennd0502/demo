@@ -33,6 +33,7 @@ class InvoiceController {
    * Initializes the controller by rendering forms and setting up event listeners.
    */
   init() {
+    console.log('Initializing InvoiceController');
     this.renderForms();
     this.setupEventListeners();
   }
@@ -193,7 +194,7 @@ class InvoiceController {
     if (Array.isArray(identifier)) {
       // Multiple deletion
       if (identifier.length === 0) {
-        this.notification.alert('Please select at least one invoice to delete', {
+        this.notification.show('Please select at least one invoice to delete', {
           type: 'warning',
         });
         return;
@@ -259,7 +260,7 @@ class InvoiceController {
     if (!validation.isValid) {
       const errorMessages = this.validator.formatValidationErrors(validation.errors);
       errorMessages.forEach((message) => {
-        this.notification.alert(message, { type: 'error' });
+        this.notification.show(message, { type: 'error' });
       });
       return;
     }
@@ -349,7 +350,7 @@ class InvoiceController {
       '.form--edit .product-list__table .product-list__table-body',
     );
     productHandlers.setProductData(invoice.products, tbody);
-    productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
+    // productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
   }
 
   /**
@@ -370,7 +371,7 @@ class InvoiceController {
     if (!validation.isValid) {
       const errorMessages = this.validator.formatValidationErrors(validation.errors);
       errorMessages.forEach((message) => {
-        this.notification.alert(message, { type: 'error' });
+        this.notification.show(message, { type: 'error' });
       });
       return;
     }
@@ -400,6 +401,7 @@ class InvoiceController {
    *  Uses try/catch to log an error if the preview update fails.
    */
   updatePreview() {
+    console.log('updatePreview called');
     const formData = formHandlers.collectFormData();
     if (!formData) return;
 

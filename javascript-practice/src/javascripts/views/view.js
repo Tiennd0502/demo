@@ -46,7 +46,7 @@ class InvoiceView {
       <span>${invoice.date}</span>`;
 
     const previewTbody = this.previewSection.querySelector('tbody');
-    previewTbody.innerHTML = ''; // Clear previous rows
+    previewTbody.innerHTML = '';
     const productRows = invoice.products
       .map(
         (product) => `

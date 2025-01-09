@@ -58,6 +58,7 @@ const Templates = {
     </div>
 
     <div class="form__action-buttons">
+      <button class="btn form__action-buttons--button-send">Send Invoice</button>
       <button class="btn form__action-buttons--button-${type === 'create' ? 'create' : 'save'}">${type === 'create' ? 'Create Invoice' : 'Save Changes'}</button>
     </div>
   </div>

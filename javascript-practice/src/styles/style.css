@@ -870,7 +870,8 @@
   border: 1px solid rgba(58, 54, 219, 0.1);
 }
 
-.form__action-buttons--button-create {
+.form__action-buttons--button-create,
+.form__action-buttons--button-save {
   flex: 1;
   background-color: var(--primary-button-color);
   color: white;

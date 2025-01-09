@@ -68,64 +68,11 @@ const Templates = {
     <thead class="table__head">
       <tr class="table__row">
         <th class="table__header"><input type="checkbox" class="checkbox" /></th>
-        <th class="table__header">
-          <div class="table__header-content">
-            <span>Invoice Id</span>
-            <img
-              class="table__sort-icon"
-              src="./assets/images/icons/main-view-icons/sort-arrow-icon.svg"
-              alt="sort icon"
-            />
-          </div>
-        </th>
-        <th class="table__header">
-          <div class="table__header-content">
-            <span>Name</span>
-            <img
-              class="table__sort-icon"
-              src="./assets/images/icons/main-view-icons/sort-arrow-icon.svg"
-              alt="sort icon"
-            />
-          </div>
-        </th>
-        <th class="table__header">
-          <div class="table__header-content">
-            <span>Email</span>
-            <img
-              class="table__sort-icon"
-              src="./assets/images/icons/main-view-icons/sort-arrow-icon.svg"
-              alt="sort icon"
-            />
-          </div>
-        </th>
-        <th class="table__header">
-          <div class="table__header-content">
-            <span>Date</span>
-            <img
-              class="table__sort-icon"
-              src="./assets/images/icons/main-view-icons/sort-arrow-icon.svg"
-              alt="sort icon"
-            />
-          </div>
-        </th>
-        <th class="table__header">
-          <div class="table__header-content">
-            <span>Status</span>
-            <img
-              class="table__sort-icon"
-              src="./assets/images/icons/main-view-icons/sort-arrow-icon.svg"
-              alt="sort icon"
-            />
-          </div>
-        </th>
-        <th></th>
-        <th class="table__header">
-          <img
-            class="table__delete-icon"
-            src="./assets/images/icons/main-view-icons/delete-icon.svg"
-            alt="Deletion icon"
-          />
-        </th>
+        <th class="table__header" data-field="id">ID <span class="sort-icon"></span></th>
+        <th class="table__header" data-field="name">Name <span class="sort-icon"></span></th>
+        <th class="table__header"  data-field="date">Date <span class="sort-icon"></span></th>
+        <th class="table__header" data-field="email">Email <span class="sort-icon"></span></th>
+        <th class="table__header" data-field="status">Status <span class="sort-icon"></span></th>
       </tr>
     </thead>
     <tbody class="table__body"></tbody>

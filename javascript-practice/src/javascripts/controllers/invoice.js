@@ -34,6 +34,7 @@ class InvoiceController {
    */
   init() {
     this.renderForms();
+    this.setupSortHandlers();
     this.setupSearchInvoice();
     this.setupEventListeners();
   }
@@ -475,6 +476,78 @@ class InvoiceController {
     this.view.renderInvoiceList(filteredInvoices);
     //Update header checkbox after filtering
     this.updateHeaderCheckbox();
+  }
+
+  setupSortHandlers() {
+    const tableHeaders = document.querySelectorAll('.table__header[data-field]');
+    let currentSortField = null;
+    let currentSortOrder = null;
+
+    tableHeaders.forEach((header) => {
+      header.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const field = header.getAttribute('data-field');
+        if (!field) return;
+
+        let newOrder;
+        if (field === currentSortField) {
+          newOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          newOrder = 'asc';
+        }
+
+        this.updateSortIcon(header, newOrder);
+
+        currentSortField = field;
+        currentSortOrder = newOrder;
+        const sortedInvoices = this.sortInvoices(field, newOrder);
+        this.view.renderInvoiceList(sortedInvoices);
+      });
+    });
+  }
+
+  updateSortIcon(activeHeader, order) {
+    //Clear the current sort state
+    const sortIcons = document.querySelectorAll('.sort-icon');
+    sortIcons.forEach((icon) => {
+      icon.classList.remove('ascending', 'descending');
+    });
+    // add icon based on current order
+    const activeIcon = activeHeader.querySelector('.sort-icon');
+    if (activeIcon) {
+      activeIcon.classList.add(order === 'asc' ? 'ascending' : 'descending');
+    }
+  }
+
+  sortInvoices(field, order = 'asc') {
+    //Avoid mutating original data
+    const sortedInvoices = [...this.invoices];
+    //Sort based on field and order
+    sortedInvoices.sort((a, b) => {
+      let valA = a[field];
+      let valB = b[field];
+
+      // Handle null or undefined values
+      if (valA == null) valA = '';
+      if (valB == null) valB = '';
+
+      //Special handling for date type data
+      if (field === 'date') {
+        valA = new Date(valA).getTime();
+        valB = new Date(valB).getTime();
+        return order === 'asc' ? valA - valB : valB - valA;
+      }
+      //format string type
+      if (typeof valA === 'string') {
+        valA = valA.toLowerCase();
+        valB = valB.toLowerCase();
+      }
+      //Sort logic
+      if (valA < valB) return order === 'asc' ? -1 : 1;
+      if (valA > valB) return order === 'asc' ? 1 : -1;
+      return 0;
+    });
+    return sortedInvoices;
   }
 }
 

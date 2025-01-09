@@ -396,6 +396,20 @@
 .notification-content.info {
   border-left: 4px solid #2196f3;
 }
+
+/* Sort icon */
+.sort-icon {
+  cursor: pointer;
+  margin-left: 5px;
+}
+.sort-icon::after {
+  content: '▲';
+  display: inline-block;
+}
+.sort-icon.descending::after {
+  content: '▼';
+}
+
 /* Mobile styles */
 @media screen and (max-width: 576px) {
   .sidebar-toggle-label {

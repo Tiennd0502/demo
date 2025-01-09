@@ -28,10 +28,33 @@ class InvoiceView {
   }
 
   /**
+   * Clears the invoice preview section
+   */
+  clearInvoicePreview() {
+    if (this.previewSection) {
+      // Clear the product rows in preview table
+      const previewTbody = this.previewSection.querySelector('.preview-table tbody');
+      if (previewTbody) {
+        previewTbody.innerHTML = '';
+      }
+
+      // Clear summary amounts
+      const summaryValues = this.previewSection.querySelectorAll('.preview-summary__value');
+      summaryValues.forEach((value) => {
+        value.textContent = '$0.00';
+      });
+    }
+  }
+
+  /**
    * Renders the preview of a single invoice.
    * @param {Object} invoice - The invoice object to render in the preview.
    */
   renderInvoicePreview(invoice) {
+    if (!invoice || !invoice.products || invoice.products.length === 0) {
+      this.clearInvoicePreview();
+      return;
+    }
     this.previewSection.querySelector('.preview__invoice-label--id').innerHTML = `Invoice No: <br/>
       <span>${invoice.id}</span>`;
     this.previewSection.querySelector('.preview-company__email .email-address').innerHTML =

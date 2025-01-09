@@ -33,7 +33,6 @@ class InvoiceController {
    * Initializes the controller by rendering forms and setting up event listeners.
    */
   init() {
-    console.log('Initializing InvoiceController');
     this.renderForms();
     this.setupEventListeners();
   }
@@ -250,6 +249,10 @@ class InvoiceController {
     if (!formData || !formHandlers.validateFormData(formData)) return;
 
     const products = productHandlers.collectProductData();
+    if (products.length === 0) {
+      this.notification.show('Please add at least one product to the invoice', { type: 'warning' });
+      return;
+    }
 
     // Validate complete invoice data
     const validation = this.validator.validateCompleteInvoice({
@@ -362,6 +365,11 @@ class InvoiceController {
     const formData = formHandlers.collectFormData();
     const products = productHandlers.collectProductData();
 
+    if (products.length === 0) {
+      this.notification.show('Please add at least one product to the invoice', { type: 'warning' });
+      return;
+    }
+
     // Validate complete invoice data
     const validation = this.validator.validateCompleteInvoice({
       ...formData,
@@ -401,23 +409,28 @@ class InvoiceController {
    *  Uses try/catch to log an error if the preview update fails.
    */
   updatePreview() {
-    console.log('updatePreview called');
     const formData = formHandlers.collectFormData();
     if (!formData) return;
 
     const products = productHandlers.collectProductData();
 
     try {
-      const tempInvoice = new Invoice(
-        formData.id,
-        formData.name,
-        formData.email,
-        formData.date,
-        formData.address,
-        formData.status,
-        products,
-      );
-      this.view.renderInvoicePreview(tempInvoice);
+      // Only create preview if there are products or the form is actively being edited
+      if (products.length > 0 || document.querySelector('.form--edit:not(.hidden)')) {
+        const tempInvoice = new Invoice(
+          formData.id,
+          formData.name,
+          formData.email,
+          formData.date,
+          formData.address,
+          formData.status,
+          products,
+        );
+        this.view.renderInvoicePreview(tempInvoice);
+      } else {
+        // Clear the preview if there are no products
+        this.view.clearInvoicePreview();
+      }
     } catch (error) {
       console.error('Error updating preview:', error);
     }

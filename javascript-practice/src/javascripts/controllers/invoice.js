@@ -34,6 +34,7 @@ class InvoiceController {
    */
   init() {
     this.renderForms();
+    this.setupSearchInvoice();
     this.setupEventListeners();
   }
 
@@ -434,6 +435,46 @@ class InvoiceController {
     } catch (error) {
       console.error('Error updating preview:', error);
     }
+  }
+
+  /**
+   * Sets up the search functionality for invoices
+   */
+  setupSearchInvoice() {
+    const searchInput = document.querySelector('.search__input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+    }
+  }
+
+  /**
+   * Handles the search functionality
+   * @param {string} searchInput - the search term entered by user
+   */
+
+  handleSearch(searchInput) {
+    if (!searchInput) {
+      this.view.renderInvoiceList(this.invoices);
+      return;
+    }
+    const formatSearchInput = searchInput.toLowerCase().trim();
+    const filteredInvoices = this.invoices.filter((invoice) => {
+      return (
+        //Search by ID
+        invoice.id.toLowerCase().includes(formatSearchInput) ||
+        //Search by name
+        invoice.name.toLowerCase().includes(formatSearchInput) ||
+        //Search by email
+        invoice.email.toLowerCase().includes(formatSearchInput) ||
+        // Search by date
+        invoice.date.toLowerCase().includes(formatSearchInput) ||
+        //Search by status
+        invoice.status.toLowerCase().includes(formatSearchInput)
+      );
+    });
+    this.view.renderInvoiceList(filteredInvoices);
+    //Update header checkbox after filtering
+    this.updateHeaderCheckbox();
   }
 }
 

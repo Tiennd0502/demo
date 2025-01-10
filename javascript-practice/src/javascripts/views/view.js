@@ -91,10 +91,6 @@ class InvoiceView {
       .join('');
 
     previewTbody.innerHTML = productRows;
-    const summarySection = this.previewSection.querySelector('.preview-summary');
-    summarySection.querySelector('.preview-summary__value').textContent =
-      `$${invoice.getTotalAmount().toFixed(2)}`;
-    console.log('renderInvoicePreview called with invoice:', invoice);
   }
 }
 export default InvoiceView;

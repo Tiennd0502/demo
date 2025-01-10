@@ -430,8 +430,8 @@ class InvoiceController {
       }
       //update preview with full invoice data + products
       const fullInvoice = {
-        ...this.invoice,
-        product: products,
+        ...invoice,
+        products: products,
       };
       this.view.renderInvoicePreview(fullInvoice);
     } catch (error) {

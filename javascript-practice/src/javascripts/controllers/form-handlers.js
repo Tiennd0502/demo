@@ -127,12 +127,19 @@ export function collectFormData() {
  */
 export function setFormData(invoice, discountPercentage) {
   const editForm = document.querySelector('.form--edit');
-  editForm.querySelector('input[placeholder="#876370"]').value = invoice.id;
-  editForm.querySelector('input[placeholder="Alison G."]').value = invoice.name;
-  editForm.querySelector('input[type="email"]').value = invoice.email;
-  editForm.querySelector('input[type="date"]').value = invoice.date;
-  editForm.querySelector('input[placeholder="Street"]').value = invoice.address;
-  editForm.querySelector('#status').value = invoice.status;
+  const fields = {
+    'input[placeholder="#876370"]': invoice.id,
+    'input[placeholder="Alison G."]': invoice.name,
+    'input[type="email"]': invoice.email,
+    'input[type="date"]': invoice.date,
+    'input[placeholder="Street"]': invoice.address,
+    '#status': invoice.status,
+  };
+
+  Object.entries(fields).forEach(([selector, value]) => {
+    const element = editForm.querySelector(selector);
+    if (element) element.value = value;
+  });
 
   const discountInput = editForm.querySelector('.discount-input');
   if (discountInput) {

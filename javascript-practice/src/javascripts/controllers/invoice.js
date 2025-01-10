@@ -3,6 +3,7 @@ import Templates from '../templates/templates.js';
 import InvoiceView from '../views/view.js';
 import ValidationUtils from '../helpers/validation-utils.js';
 import NotificationUtils from '../helpers/notification-utils.js';
+import DataHandler from '../data-handler.js';
 import * as formHandlers from './form-handlers.js';
 import * as productHandlers from './product-handlers.js';
 
@@ -23,6 +24,7 @@ class InvoiceController {
     this.view = new InvoiceView();
     this.validator = new ValidationUtils();
     this.notification = new NotificationUtils();
+    this.dataHandler = new DataHandler();
     this.invoices = [];
 
     this.discountPercentage = 5;
@@ -33,11 +35,21 @@ class InvoiceController {
    * Initializes the controller by rendering forms and setting up event listeners.
    */
   init() {
+    this.loadInvoices();
     this.renderForms();
     this.setupSortHandlers();
     this.setupSearchInvoice();
     this.setupEventListeners();
     this.setupFavoriteHandler();
+  }
+
+  async loadInvoices() {
+    try {
+      this.invoices = await this.dataHandler.getInvoiceList();
+      this.view.renderInvoiceList(this.invoices);
+    } catch (error) {
+      this.notification.show('Fail to load invoices', { type: 'error' });
+    }
   }
 
   /**
@@ -249,7 +261,7 @@ class InvoiceController {
    * Validates the form data and product data before creating the invoice.
    * Renders the updated invoice list and invoice preview.
    */
-  addInvoice() {
+  async addInvoice() {
     const formData = formHandlers.collectFormData();
     if (!formData || !formHandlers.validateFormData(formData)) return;
 
@@ -274,21 +286,32 @@ class InvoiceController {
     }
 
     // Proceed with adding invoice if validation passes
-    const invoice = new Invoice(
-      formData.id,
-      formData.name,
-      formData.email,
-      formData.date,
-      formData.address,
-      formData.status,
-      products,
-    );
+    try {
+      const invoice = await this.dataHandler.createInvoice({
+        id: formData.id,
+        name: formData.name,
+        email: formData.email,
+        date: formData.date,
+        address: formData.address,
+        status: formData.status,
+        favorite: false,
+      });
+      const productPromises = products.map((product) =>
+        this.dataService.addProduct({
+          ...product,
+          invoiceId: invoice.id,
+        }),
+      );
+      await Promise.all(productPromises);
 
-    this.invoices.push(invoice);
-    this.view.renderInvoiceList(this.invoices);
-    this.view.renderInvoicePreview(invoice);
-    formHandlers.resetFormStates();
-    this.notification.show('Invoice created successfully', { type: 'success' });
+      this.invoices.push(invoice);
+      this.view.renderInvoiceList(this.invoices);
+      this.view.renderInvoicePreview(invoice);
+      formHandlers.resetFormStates();
+      this.notification.show('Invoice created successfully', { type: 'success' });
+    } catch (error) {
+      this.notification.show('Fail to create invoice', { type: 'error' });
+    }
   }
 
   /**
@@ -347,18 +370,47 @@ class InvoiceController {
    * Show edit form and populate it with the invoice data
    * @param {string} id - the ID of the invoice to edit
    */
-  editInvoice(id) {
-    const invoice = this.invoices.find((invoice) => invoice.id === id);
-    if (!invoice) return;
+  async editInvoice(id) {
+    try {
+      //get invoice from server
+      const invoice = await this.dataHandler.getInvoiceById(id);
+      if (!invoice) {
+        this.notification.show('Invoice not found', { type: 'error' });
+        return;
+      }
+      // get product data for this invoice
+      const products = await this.dataHandler.getProductsByInvoiceId(id);
+      // show edit form and populate data
+      formHandlers.showEditForm();
+      formHandlers.setFormData(invoice, this.discountPercentage);
 
-    formHandlers.showEditForm();
-    formHandlers.setFormData(invoice, this.discountPercentage);
+      // populate product data into tbody
+      const tbody = document.querySelector(
+        '.form--edit .product-list__table .product-list__table-body',
+      );
+      // clear any existing row
+      if (tbody) {
+        tbody.innerHTML = '';
 
-    const tbody = document.querySelector(
-      '.form--edit .product-list__table .product-list__table-body',
-    );
-    productHandlers.setProductData(invoice.products, tbody);
-    // productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
+        //add product row
+        products.forEach((product) => {
+          //retrieve product template
+          const row = Templates.addProductPriceCalculation(product);
+          tbody.insertAdjacentHTML('beforeend', row);
+        });
+        //update total
+        productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
+      }
+      //update preview with full invoice data + products
+      const fullInvoice = {
+        ...this.invoice,
+        product: products,
+      };
+      this.view.renderInvoicePreview(fullInvoice);
+    } catch (error) {
+      console.error('Error loading invoice from editing', error);
+      this.notification.show('fail to load invoice data', { type: 'error' });
+    }
   }
 
   /**
@@ -366,7 +418,7 @@ class InvoiceController {
    * Validates form and product data before updating the invoice
    * Render the updated invoice list and invoice preview
    */
-  saveChanges() {
+  async saveChanges() {
     const formData = formHandlers.collectFormData();
     const products = productHandlers.collectProductData();
 
@@ -389,24 +441,47 @@ class InvoiceController {
       return;
     }
 
-    // Proceed with saving changes if validation passes
-    const index = this.invoices.findIndex((inv) => inv.id === formData.id);
-    if (index === -1) return;
+    try {
+      const updatedInvoice = await this.dataHandler.updateInvoice(formData.id, {
+        id: formData.id,
+        name: formData.name,
+        email: formData.email,
+        date: formData.date,
+        address: formData.address,
+        status: formData.status,
+        favorite: this.invoices.find((inv) => (inv.id === formData.id)?.favorite || false),
+      });
+      const existingProducts = await this.dataHandler.getProductsByInvoiceId(formData.id);
 
-    this.invoices[index] = new Invoice(
-      formData.id,
-      formData.name,
-      formData.email,
-      formData.date,
-      formData.address,
-      formData.status,
-      products,
-    );
+      await Promise.all(
+        existingProducts.map((product) => {
+          this.dataHandler.deleteProduct(product.id);
+        }),
+      );
 
-    this.view.renderInvoiceList(this.invoices);
-    this.view.renderInvoicePreview(this.invoices[index]);
-    this.notification.show('Invoice updated successfully', { type: 'success' });
-    formHandlers.resetFormStates();
+      await Promise.all(
+        products.map((product) =>
+          this.dataHandler.addProduct({
+            ...product,
+            invoiceId: formData.id,
+          }),
+        ),
+      );
+      const index = this.invoices.findIndex((inv) => inv.id === formData.id);
+      if (index !== -1) {
+        this.invoices[index] = {
+          ...updatedInvoice,
+          products: products,
+        };
+      }
+      this.view.renderInvoiceList(this.invoices);
+      this.view.renderInvoicePreview(this.invoices[index]);
+      this.notification.show('Invoice updated successfully', { type: 'success' });
+      formHandlers.resetFormStates();
+    } catch (error) {
+      console.error('Error updating invoice', error);
+      this.notification.show('Fail to update invoice', { type: 'error' });
+    }
   }
 
   /**

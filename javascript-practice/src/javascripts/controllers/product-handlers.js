@@ -176,4 +176,8 @@ export function setProductData(products, tbody) {
     const row = Templates.addProductPriceCalculation(product);
     tbody.insertAdjacentHTML('beforeend', row);
   });
+
+  setupProductTableListeners(() => {
+    updateAmounts(tbody);
+  });
 }

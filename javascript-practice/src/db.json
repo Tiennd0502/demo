@@ -1,0 +1,81 @@
+{
+  "invoices": [
+    {
+      "id": "000001",
+      "name": "Linh Nguyen",
+      "email": "linhnguyen@gmail.com",
+      "date": "2025-01-10",
+      "address": "123 Phan Chau Trinh",
+      "status": "Pending",
+      "favorite": false
+    },
+    {
+      "id": "000002",
+      "name": "Nam Tran",
+      "email": "namtran@gmail.com",
+      "date": "2025-01-10",
+      "address": "135 Nguyen Hue",
+      "status": "Complete",
+      "favorite": true
+    },
+    {
+      "id": "000003",
+      "name": "Minh Nguyen",
+      "email": "minhnguyen@gmail.com",
+      "date": "2024-12-30",
+      "address": "123 Le Loi",
+      "status": "Cancel"
+    },
+    {
+      "id": "123456",
+      "name": "Tuan Tran",
+      "email": "tuantran@gmail.com",
+      "date": "2025-01-06",
+      "address": "122 tran quoc toan",
+      "status": "Complete",
+      "favorite": false
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "invoiceId": "000001",
+      "name": "ipad",
+      "rate": 1000,
+      "quantity": 2,
+      "amount": 2000
+    },
+    {
+      "id": 2,
+      "invoiceId": "000002",
+      "name": "iphone",
+      "rate": 1200,
+      "quantity": 1,
+      "amount": 1200
+    },
+    {
+      "id": 3,
+      "invoiceId": "000001",
+      "name": "tv",
+      "rate": 2000,
+      "quantity": 1,
+      "amount": 2000
+    },
+    {
+      "id": 4,
+      "invoiceId": "000002",
+      "name": "iMac",
+      "rate": 2200,
+      "quantity": 1,
+      "amount": 2200
+    },
+    {
+      "id": "d649",
+      "name": "fridge",
+      "rate": 1000,
+      "quantity": 1,
+      "amount": 1000,
+      "invoiceId": "000003"
+    }
+  ]
+}

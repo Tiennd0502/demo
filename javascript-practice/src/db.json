@@ -6,8 +6,7 @@
       "email": "linhnguyen@gmail.com",
       "date": "2025-01-10",
       "address": "123 Phan Chau Trinh",
-      "status": "Pending",
-      "favorite": false
+      "status": "Pending"
     },
     {
       "id": "000002",
@@ -15,8 +14,7 @@
       "email": "namtran@gmail.com",
       "date": "2025-01-10",
       "address": "135 Nguyen Hue",
-      "status": "Complete",
-      "favorite": true
+      "status": "Complete"
     },
     {
       "id": "000003",
@@ -25,57 +23,56 @@
       "date": "2024-12-30",
       "address": "123 Le Loi",
       "status": "Cancel"
-    },
-    {
-      "id": "123456",
-      "name": "Tuan Tran",
-      "email": "tuantran@gmail.com",
-      "date": "2025-01-06",
-      "address": "122 tran quoc toan",
-      "status": "Complete",
-      "favorite": false
     }
   ],
   "products": [
     {
-      "id": 1,
-      "invoiceId": "000001",
+      "id": "e558",
       "name": "ipad",
       "rate": 1000,
       "quantity": 2,
-      "amount": 2000
+      "amount": 2000,
+      "invoiceId": "000001"
     },
     {
-      "id": 2,
-      "invoiceId": "000002",
-      "name": "iphone",
-      "rate": 1200,
-      "quantity": 1,
-      "amount": 1200
-    },
-    {
-      "id": 3,
-      "invoiceId": "000001",
+      "id": "a3c9",
       "name": "tv",
       "rate": 2000,
       "quantity": 1,
-      "amount": 2000
+      "amount": 2000,
+      "invoiceId": "000001"
     },
     {
-      "id": 4,
-      "invoiceId": "000002",
-      "name": "iMac",
-      "rate": 2200,
-      "quantity": 1,
-      "amount": 2200
-    },
-    {
-      "id": "d649",
+      "id": "f63e",
       "name": "fridge",
       "rate": 1000,
-      "quantity": 1,
-      "amount": 1000,
+      "quantity": 122,
+      "amount": 122000,
       "invoiceId": "000003"
+    },
+    {
+      "id": "8f35",
+      "name": "tv",
+      "rate": 1000,
+      "quantity": 11,
+      "amount": 11000,
+      "invoiceId": "000003"
+    },
+    {
+      "id": "f172",
+      "name": "iphone",
+      "rate": 1200,
+      "quantity": 1,
+      "amount": 1200,
+      "invoiceId": "000002"
+    },
+    {
+      "id": "ebc7",
+      "name": "ipad",
+      "rate": 1000,
+      "quantity": 200,
+      "amount": 200000,
+      "invoiceId": "000002"
     }
   ]
 }

@@ -65,10 +65,6 @@ class DataHandler {
     try {
       const response = await fetch(`${this.rootUrl}/invoices/${id}`, {
         method: 'DELETE',
-        header: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(invoice),
       });
       if (!response.ok) throw new Error('Fail to delete invoice');
       return true;
@@ -141,10 +137,6 @@ class DataHandler {
     try {
       const response = await fetch(`${this.rootUrl}/products/${id}`, {
         method: 'DELETE',
-        header: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(product),
       });
       if (!response.ok) throw new Error('fail to delete product');
       return await response.json();

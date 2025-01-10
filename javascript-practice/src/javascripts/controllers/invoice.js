@@ -148,7 +148,7 @@ class InvoiceController {
   /**
    *  Confirmation dialog for deleting invoices.
    * @param {number} count - The number of invoices to delete.
-   * @param {string} [id=null] - The ID of the single invoice to delete (optional).
+   * @param {string} [id = null] - The ID of the single invoice to delete (optional).
    * @returns {boolean} True if the user confirms the deletion, false otherwise.
    */
   async confirmDeletion(count, id = null) {
@@ -206,43 +206,70 @@ class InvoiceController {
    * @param {Event,Array} identifier - event for single deletion or array of checkboxes for multiple deletion
    */
   async handleInvoiceDeletion(identifier) {
-    // Handle both multiple deletion and single deletion cases
-    if (Array.isArray(identifier)) {
-      // Multiple deletion
-      if (identifier.length === 0) {
-        this.notification.show('Please select at least one invoice to delete', {
-          type: 'warning',
-        });
-        return;
+    try {
+      // Handle both multiple deletion and single deletion cases
+      if (Array.isArray(identifier)) {
+        // Multiple deletion
+        if (identifier.length === 0) {
+          this.notification.show('Please select at least one invoice to delete', {
+            type: 'warning',
+          });
+          return;
+        }
+
+        const confirmed = await this.confirmDeletion(identifier.length);
+        if (confirmed) {
+          // Get array of invoice IDs to delete
+          const idsToDelete = identifier.map((checkbox) => {
+            const row = checkbox.closest('.table__row');
+            return row.querySelector('.btn--delete').dataset.id;
+          });
+
+          // Delete all products for these invoices first
+          for (const invoiceId of idsToDelete) {
+            const products = await this.dataHandler.getProductsByInvoiceId(invoiceId);
+            await Promise.all(
+              products.map((product) => this.dataHandler.deleteProduct(product.id)),
+            );
+          }
+
+          // Delete all invoices
+          await this.dataHandler.deleteMultipleInvoices(idsToDelete);
+
+          // Update local state
+          this.invoices = this.invoices.filter((invoice) => !idsToDelete.includes(invoice.id));
+          this.headerCheckbox.checked = false;
+          this.notification.show('Invoices deleted successfully', { type: 'success' });
+        }
+      } else {
+        // Single deletion
+        const deleteBtn = identifier.target.closest('.btn--delete');
+        if (!deleteBtn) return;
+
+        const invoiceId = deleteBtn.dataset.id;
+
+        const confirmed = await this.confirmDeletion(1, invoiceId);
+        if (confirmed) {
+          // Delete all products for this invoice first
+          const products = await this.dataHandler.getProductsByInvoiceId(invoiceId);
+          await Promise.all(products.map((product) => this.dataHandler.deleteProduct(product.id)));
+
+          // Delete the invoice
+          await this.dataHandler.deleteInvoice(invoiceId);
+
+          // Update local state
+          this.invoices = this.invoices.filter((invoice) => invoice.id !== invoiceId);
+          this.notification.show('Invoice deleted successfully', { type: 'success' });
+        }
       }
 
-      const confirmed = await this.confirmDeletion(identifier.length);
-      if (confirmed) {
-        identifier.forEach((checkbox) => {
-          const row = checkbox.closest('.table__row');
-          const id = row.querySelector('.btn--delete').dataset.id;
-          this.invoices = this.invoices.filter((invoice) => invoice.id !== id);
-        });
-        this.headerCheckbox.checked = false;
-        this.notification.show('Invoice deleted successfully', { type: 'success' });
-      }
-    } else {
-      // Single deletion
-      const deleteBtn = identifier.target.closest('.btn--delete');
-      if (!deleteBtn) return;
-
-      const invoiceId = deleteBtn.dataset.id;
-
-      const confirmed = await this.confirmDeletion(1, invoiceId);
-      if (confirmed) {
-        this.invoices = this.invoices.filter((invoice) => invoice.id !== invoiceId);
-        this.notification.show('Invoice deleted successfully', { type: 'success' });
-      }
+      // Update view after any type of deletion
+      this.view.renderInvoiceList(this.invoices);
+      this.updateHeaderCheckbox();
+    } catch (error) {
+      console.error('Error deleting invoice(s):', error);
+      this.notification.show('Failed to delete invoice(s)', { type: 'error' });
     }
-
-    // Update view after any type of deletion
-    this.view.renderInvoiceList(this.invoices);
-    this.updateHeaderCheckbox();
   }
 
   /**
@@ -297,7 +324,7 @@ class InvoiceController {
         favorite: false,
       });
       const productPromises = products.map((product) =>
-        this.dataService.addProduct({
+        this.dataHandler.addProduct({
           ...product,
           invoiceId: invoice.id,
         }),

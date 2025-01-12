@@ -1,7 +1,7 @@
 class ValidationUtils {
   constructor() {
     this.emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    this.invoiceIdRegex = /^#?\d{6,}$/;
+    // this.invoiceIdRegex = /^#?\d{6,}$/;
   }
 
   /**
@@ -13,11 +13,11 @@ class ValidationUtils {
     const errors = {};
 
     // Validate Invoice ID
-    if (!formData.id) {
-      errors.id = 'Invoice ID is required';
-    } else if (!this.invoiceIdRegex.test(formData.id)) {
-      errors.id = 'Invoice ID must have at least 6-digit number with optional # prefix';
-    }
+    // if (!formData.id) {
+    //   errors.id = 'Invoice ID is required';
+    // } else if (!this.invoiceIdRegex.test(formData.id)) {
+    //   errors.id = 'Invoice ID must have at least 6-digit number with optional # prefix';
+    // }
 
     // Validate Name
     if (!formData.name) {

@@ -15,7 +15,12 @@ const Templates = {
     <div class="form-grid">
       <div class="form__group">
         <label class="form__group-label">Invoice ID</label>
-        <input class="form__group-input" type="text" placeholder="#876370" />
+        <input 
+          class="form__group-input" 
+          type="text" 
+          placeholder="#876370"
+          ${type === 'edit' ? 'disabled' : ''}
+          data-auto-id="true" />
       </div>
       <div class="form__group">
         <label class="form__group-label">Date</label>

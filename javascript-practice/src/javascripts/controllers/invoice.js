@@ -83,6 +83,7 @@ class InvoiceController {
 
     this.setupAddInvoiceButton();
     this.setupSaveChangeButton();
+
     this.setupPopupMenu();
     this.setupMultipleInvoiceDeletion();
 
@@ -139,6 +140,8 @@ class InvoiceController {
     // Close popup on escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
         const activePopups = document.querySelectorAll('.popup-content.active');
         activePopups.forEach((popup) => popup.classList.remove('active'));
       }
@@ -292,6 +295,10 @@ class InvoiceController {
     const formData = formHandlers.collectFormData();
     if (!formData || !formHandlers.validateFormData(formData)) return;
 
+    // Validate ID uniqueness
+    const isValidId = await this.validateInvoiceId(formData.id);
+    if (!isValidId) return;
+
     const products = productHandlers.collectProductData();
     if (products.length === 0) {
       this.notification.show('Please add at least one product to the invoice', { type: 'warning' });
@@ -338,6 +345,31 @@ class InvoiceController {
       this.notification.show('Invoice created successfully', { type: 'success' });
     } catch (error) {
       this.notification.show('Fail to create invoice', { type: 'error' });
+    }
+  }
+
+  async validateInvoiceId(id, originalId = null) {
+    try {
+      // Get all existing invoices
+      const existingInvoices = await this.dataHandler.getInvoiceList();
+
+      // If we're editing (originalId exists), exclude the current invoice from the check
+      const isDuplicate = existingInvoices.some(
+        (invoice) => invoice.id === id && invoice.id !== originalId,
+      );
+
+      if (isDuplicate) {
+        this.notification.show('Invoice ID already exists. Please use a different ID.', {
+          type: 'error',
+        });
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error validating invoice ID:', error);
+      this.notification.show('Failed to validate invoice ID', { type: 'error' });
+      return false;
     }
   }
 

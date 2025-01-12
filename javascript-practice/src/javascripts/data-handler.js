@@ -31,7 +31,7 @@ class DataHandler {
     try {
       const response = await fetch(`${this.rootUrl}/invoices`, {
         method: 'POST',
-        header: {
+        headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(invoice),
@@ -48,7 +48,7 @@ class DataHandler {
     try {
       const response = await fetch(`${this.rootUrl}/invoices/${id}`, {
         method: 'PUT',
-        header: {
+        headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(invoice),
@@ -61,7 +61,7 @@ class DataHandler {
     }
   }
 
-  async deleteInvoice(id, invoice) {
+  async deleteInvoice(id) {
     try {
       const response = await fetch(`${this.rootUrl}/invoices/${id}`, {
         method: 'DELETE',
@@ -103,7 +103,7 @@ class DataHandler {
     try {
       const response = await fetch(`${this.rootUrl}/products`, {
         method: 'POST',
-        header: {
+        headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(product),
@@ -120,7 +120,7 @@ class DataHandler {
     try {
       const response = await fetch(`${this.rootUrl}/products/${id}`, {
         method: 'PUT',
-        header: {
+        headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(product),

@@ -1,86 +1,63 @@
 {
   "invoices": [
     {
-      "id": "000001",
-      "name": "Linh Nguyen",
-      "email": "linhnguyen@gmail.com",
-      "date": "2025-01-10",
-      "address": "123 Phan Chau Trinh",
-      "status": "Pending"
+      "id": "1111111111111",
+      "name": "Minh Nguyen",
+      "email": "minhnguyen@gmail.com",
+      "date": "2024-12-17",
+      "address": "123 Le Loi",
+      "status": "Cancel"
     },
     {
-      "id": "000002",
-      "name": "Nam Tran",
-      "email": "namtran@gmail.com",
-      "date": "2025-01-10",
-      "address": "135 Nguyen Hue",
+      "id": "33333333333",
+      "name": "aaaaaxxxx",
+      "email": "aaaaa@gmail.com",
+      "date": "2024-12-30",
+      "address": "1231 asdasdasda",
       "status": "Complete"
     },
     {
-      "id": "000003",
-      "name": "Minh Nguyen",
-      "email": "minhnguyen@gmail.com",
-      "date": "2024-12-30",
-      "address": "123 Le Loi",
-      "status": "Cancel"
+      "id": "11111111222222",
+      "name": "An Tranaaaddddddd",
+      "email": "antran@gmail.com",
+      "date": "2025-01-08",
+      "address": "135 Nguyen Hue aaaa",
+      "status": "Pending"
+    },
+    {
+      "id": "3333333",
+      "name": "aaaaadd",
+      "email": "asasds@gmail.com",
+      "date": "2025-01-01",
+      "address": "1234141",
+      "status": "Cancel",
+      "favorite": false
+    },
+    {
+      "id": "INV-1736699071091",
+      "name": "aaaaaa",
+      "email": "1231@adasda.com",
+      "date": "2024-12-01",
+      "address": "12312",
+      "status": "Complete"
     }
   ],
   "products": [
     {
-      "id": "a467",
-      "name": "iphone",
-      "rate": 1200,
-      "quantity": 1,
-      "amount": 1200,
-      "invoiceId": "000002"
+      "id": "3e06",
+      "name": "cc",
+      "rate": 11,
+      "quantity": 111,
+      "amount": 1221,
+      "invoiceId": "INV-1736699071091"
     },
     {
-      "id": "a5c6",
-      "name": "ipad",
-      "rate": 1000,
-      "quantity": 200,
-      "amount": 200000,
-      "invoiceId": "000002"
-    },
-    {
-      "id": "8ff0",
-      "name": "fridge",
-      "rate": 1000,
-      "quantity": 122,
-      "amount": 122000,
-      "invoiceId": "000003"
-    },
-    {
-      "id": "6d0e",
-      "name": "tv",
-      "rate": 1000,
-      "quantity": 11,
-      "amount": 11000,
-      "invoiceId": "000003"
-    },
-    {
-      "id": "b05b",
-      "name": "keyboard",
-      "rate": 100,
-      "quantity": 1,
-      "amount": 100,
-      "invoiceId": "000003"
-    },
-    {
-      "id": "a803",
-      "name": "ipad",
-      "rate": 1000,
-      "quantity": 2,
-      "amount": 2000,
-      "invoiceId": "000001"
-    },
-    {
-      "id": "67ca",
-      "name": "tv",
-      "rate": 1000,
-      "quantity": 1,
-      "amount": 1000,
-      "invoiceId": "000001"
+      "id": "13ba",
+      "name": "ccc",
+      "rate": 11,
+      "quantity": 111,
+      "amount": 1221,
+      "invoiceId": "1111111111111"
     }
   ]
 }

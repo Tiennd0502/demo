@@ -6,7 +6,6 @@ class App {
     this.invoice = new Invoice();
     this.invoiceView = new InvoiceView();
     this.invoiceController = new InvoiceController(this.invoice, this.invoiceView);
-    this.invoiceController.init();
   }
 }
 export default App;

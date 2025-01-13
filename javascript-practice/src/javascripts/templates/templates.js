@@ -19,7 +19,7 @@ const Templates = {
           class="form__group-input" 
           type="text" 
           placeholder="#876370"
-          ${type === 'edit' ? 'disabled' : ''}
+          disabled
           data-auto-id="true" />
       </div>
       <div class="form__group">

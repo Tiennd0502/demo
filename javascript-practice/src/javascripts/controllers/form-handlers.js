@@ -109,9 +109,10 @@ export function collectFormData() {
     document.querySelector('.form--edit:not(.hidden)');
 
   if (!activeForm) return null;
+  const idInput = activeForm.querySelector('input[data-auto-id="true"]');
 
   return {
-    id: activeForm.querySelector('input[placeholder="#876370"]')?.value || `INV-${Date.now()}`,
+    id: idInput?.value || idInput?.placeholder || generateInvoiceId(),
     name: activeForm.querySelector('input[placeholder="Alison G."]')?.value || '',
     email: activeForm.querySelector('input[type="email"]')?.value || '',
     date: activeForm.querySelector('input[type="date"]')?.value || '',

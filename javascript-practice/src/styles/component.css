@@ -511,6 +511,10 @@
   border-left: 0.4rem solid var(--info);
 }
 
+.form__group-date-icon {
+  padding-right: 1.5rem;
+}
+
 /* Sort icon */
 .sort-icon {
   cursor: pointer;

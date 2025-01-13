@@ -2,11 +2,12 @@
   "invoices": [
     {
       "id": "INV-25-01-9494",
-      "name": "Alex Tan",
+      "name": "Alex Tanaaassssss",
       "email": "alext@gmail.com",
       "date": "2024-12-30",
       "address": "112 Delta st",
-      "status": "Cancel"
+      "status": "Complete",
+      "favorite": false
     },
     {
       "id": "INV-25-01-6999",
@@ -31,6 +32,31 @@
       "email": "aaa@gmail.com",
       "date": "2024-12-30",
       "address": "aaaaaaaa",
+      "status": "Complete",
+      "favorite": false
+    },
+    {
+      "id": "INV-25-01-6864",
+      "name": "A222",
+      "email": "Alex@gmail.com",
+      "date": "2025-01-07",
+      "address": "22222222",
+      "status": "Complete"
+    },
+    {
+      "id": "INV-25-01-1994",
+      "name": "sssssssaaa",
+      "email": "ssssss@gmail.com",
+      "date": "2024-12-29",
+      "address": "123 phan chau trinh",
+      "status": "Complete"
+    },
+    {
+      "id": "INV-25-01-7519",
+      "name": "aaa",
+      "email": "asdaa@gmail.com",
+      "date": "2024-12-30",
+      "address": "123 aaaaaaaa",
       "status": "Complete",
       "favorite": false
     }
@@ -69,7 +95,39 @@
       "invoiceId": "INV-25-01-6999"
     },
     {
-      "id": "8803",
+      "id": "89be",
+      "name": "ccc",
+      "rate": 22,
+      "quantity": 22,
+      "amount": 484,
+      "invoiceId": "INV-25-01-3764"
+    },
+    {
+      "id": "fbb3",
+      "name": "cc",
+      "rate": 222,
+      "quantity": 222,
+      "amount": 49284,
+      "invoiceId": "INV-25-01-6864"
+    },
+    {
+      "id": "8526",
+      "name": "ipad",
+      "rate": 22,
+      "quantity": 22,
+      "amount": 484,
+      "invoiceId": "INV-25-01-1994"
+    },
+    {
+      "id": "0462",
+      "name": "ccc",
+      "rate": 22,
+      "quantity": 22,
+      "amount": 484,
+      "invoiceId": "INV-25-01-7519"
+    },
+    {
+      "id": "88af",
       "name": "monitor",
       "rate": 2200,
       "quantity": 1,
@@ -77,12 +135,12 @@
       "invoiceId": "INV-25-01-9494"
     },
     {
-      "id": "89be",
-      "name": "ccc",
-      "rate": 22,
+      "id": "aa86",
+      "name": "iphone",
+      "rate": 1100,
       "quantity": 22,
-      "amount": 484,
-      "invoiceId": "INV-25-01-3764"
+      "amount": 24200,
+      "invoiceId": "INV-25-01-9494"
     }
   ]
 }

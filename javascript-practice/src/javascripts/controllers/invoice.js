@@ -22,40 +22,41 @@ import { generateInvoiceId, updateInvoiceIdPlaceholder } from '../helpers/invoic
  */
 class InvoiceController {
   constructor() {
+    this.initializeServices();
+    this.initializeState();
+    this.init();
+  }
+
+  initializeServices() {
     this.invoice = new Invoice();
     this.view = new InvoiceView();
     this.validator = new ValidationUtils();
     this.notification = new NotificationUtils();
     this.dataHandler = new DataHandler();
-    this.invoices = [];
-
-    this.discountPercentage = 5;
-    this.init();
   }
 
-  /**
-   * Initializes the controller by rendering forms and setting up event listeners.
-   */
+  initializeState() {
+    this.invoices = [];
+    this.discountPercentage = 5;
+  }
+
   init() {
     this.loadInvoices();
     this.setupSearchInvoice();
     this.setupEventListeners();
   }
 
-  async loadInvoices() {
-    try {
-      this.invoices = await this.dataHandler.getInvoiceList();
-      this.view.renderInvoiceList(this.invoices);
-      sortHandlers(this.invoices, (sortedInvoices) => this.view.renderInvoiceList(sortedInvoices));
-    } catch (error) {
-      this.notification.show('Fail to load invoices', { type: 'error' });
-    }
-  }
-
   /**
    * Sets up event listeners for invoice actions, form events, and product list events.
    */
   setupEventListeners() {
+    this.setupInvoiceListListeners();
+    this.setupFormListeners();
+    this.setupProductListeners();
+    this.setupDeletionListeners();
+  }
+
+  setupInvoiceListListeners() {
     // Remove any existing listeners first
     const existingInvoiceList = this.view.invoiceList;
     const newInvoiceList = existingInvoiceList.cloneNode(true);
@@ -63,70 +64,40 @@ class InvoiceController {
     this.view.invoiceList = newInvoiceList;
 
     // Set up new listeners
-    this.view.invoiceList.addEventListener(
-      'click',
-      (e) => {
-        this.handleInvoiceActions(e);
-      },
-      { capture: true },
-    );
-    this.view.renderForms();
-    this.setupAddInvoiceButton();
-    this.setupSaveChangeButton();
-    this.setupMultipleInvoiceDeletion();
+    this.view.invoiceList.addEventListener('click', this.handleInvoiceActions.bind(this), {
+      capture: true,
+    });
+  }
 
+  setupFormListeners() {
+    this.view.renderForms();
+    //add listener for create form button to update id
+    document.querySelector('.btn--primary').addEventListener('click', () => {
+      formHandlers.showCreateForm();
+      updateInvoiceIdPlaceholder();
+    });
+
+    // Sets up the event listener for the "Add Invoice" button.
+    document
+      .querySelector('.form__action-buttons--button-create')
+      .addEventListener('click', () => this.addInvoice());
+
+    // Sets up the event listener for the "Save Changes" button.
+    document
+      .querySelector('.form--edit .form__action-buttons--button-save')
+      .addEventListener('click', () => this.saveChanges());
+
+    formHandlers.setupFormEventListeners(this.handleDiscountUpdate.bind(this));
+  }
+
+  setupProductListeners() {
+    productHandlers.setupProductListHandlers(() => this.updatePreview());
     formHandlers.setupFormEventListeners((newDiscount) => {
       this.discountPercentage = newDiscount;
       const tbody = this.getActiveFormTbody();
       if (tbody) {
         productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
       }
-    });
-
-    productHandlers.setupProductListHandlers(() => this.updatePreview());
-
-    //add listener for create form button to update id
-    document.querySelector('.btn--primary').addEventListener('click', () => {
-      formHandlers.showCreateForm();
-      updateInvoiceIdPlaceholder();
-    });
-  }
-
-  /**
-   * Sets up the event listener for the "Add Invoice" button.
-   */
-  setupAddInvoiceButton() {
-    document
-      .querySelector('.form__action-buttons--button-create')
-      .addEventListener('click', () => this.addInvoice());
-  }
-
-  /**
-   * Sets up the event listener for the "Save Changes" button.
-   */
-  setupSaveChangeButton() {
-    document
-      .querySelector('.form--edit .form__action-buttons--button-save')
-      .addEventListener('click', () => this.saveChanges());
-  }
-
-  /**
-   *  Confirmation dialog for deleting invoices.
-   * @param {number} count - The number of invoices to delete.
-   * @param {string} [id = null] - The ID of the single invoice to delete (optional).
-   * @returns {boolean} True if the user confirms the deletion, false otherwise.
-   */
-  async confirmDeletion(count, id = null) {
-    const message =
-      count > 1
-        ? `Are you sure you want to delete ${count} selected invoice(s)?`
-        : `Are you sure you want to delete invoice #${id}?`;
-
-    return await this.notification.confirm(message, {
-      type: 'warning',
-      title: 'Delete Invoice',
-      confirmText: 'Delete',
-      cancelText: 'Cancel',
     });
   }
 
@@ -137,21 +108,278 @@ class InvoiceController {
    * - Listening for clicks on the multiple deletion icon to delete selected invoices.
    * - Listening for individual delete button clicks using event delegation.
    */
-  setupMultipleInvoiceDeletion() {
+  setupDeletionListeners() {
     this.tableBody = document.querySelector('.table__body');
     this.headerCheckbox = document.querySelector('.table__head .checkbox');
     this.deleteIcon = document.querySelector('.table__delete-icon');
 
-    // Listen for header checkbox changes
     this.headerCheckbox?.addEventListener('change', this.handleHeaderCheckboxChange.bind(this));
+    this.deleteIcon?.addEventListener('click', this.handleMultiDeletion.bind(this));
+  }
 
-    // Listen for bulk delete icon clicks
-    this.deleteIcon?.addEventListener('click', async (e) => {
+  async loadInvoices() {
+    try {
+      this.invoices = await this.dataHandler.getInvoiceList();
+      this.view.renderInvoiceList(this.invoices);
+      sortHandlers(this.invoices, (sortedInvoices) => this.view.renderInvoiceList(sortedInvoices));
+    } catch (error) {
+      this.notification.show('Failed to load invoices', { type: 'error' });
+    }
+  }
+
+  /**
+   * Sets up the search functionality for invoices
+   */
+  setupSearchInvoice() {
+    const searchInput = document.querySelector('.search__input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+    }
+  }
+
+  /**
+   * Handles the search functionality
+   * @param {string} searchInput - the search term entered by user
+   */
+  handleSearch(searchInput) {
+    if (!searchInput) {
+      this.view.renderInvoiceList(this.invoices);
+      return;
+    }
+
+    const formattedInput = searchInput.toLowerCase().trim();
+    const filteredInvoices = this.filterInvoices(formattedInput);
+
+    this.view.renderInvoiceList(filteredInvoices);
+    this.view.updateHeaderCheckbox();
+  }
+
+  filterInvoices(searchTerm) {
+    return this.invoices.filter((invoice) =>
+      ['id', 'name', 'email', 'date', 'status'].some((field) =>
+        invoice[field].toLowerCase().includes(searchTerm),
+      ),
+    );
+  }
+
+  /**
+   * Handles actions (edit, delete) on invoices in the invoice list.
+   *
+   * @param {Event} e - The event object.
+   */
+  async handleInvoiceActions(e) {
+    const row = e.target.closest('.table__row');
+    if (!row) return;
+
+    const idCell = row.querySelector('[data-label="Invoice Id"]');
+    if (!idCell) return;
+
+    const id = idCell.textContent;
+
+    // Handle delete button click
+    if (e.target.closest('.btn--delete')) {
       e.preventDefault();
       e.stopPropagation();
-      const checkedRows = this.tableBody.querySelectorAll('.table__checkbox:checked');
-      await this.handleInvoiceDeletion(Array.from(checkedRows));
+
+      const popupContent = e.target.closest('.popup-content');
+      await this.handleInvoiceDeletion(e);
+      if (popupContent) {
+        popupContent.classList.remove('active');
+      }
+      return;
+    }
+
+    // Handle edit button click
+    if (e.target.closest('.btn--edit')) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.editInvoice(id);
+      const popupContent = e.target.closest('.popup-content');
+      if (popupContent) {
+        popupContent.classList.remove('active');
+      }
+      return;
+    }
+  }
+
+  /**
+   * Adds a new invoice based on the form data and product data.
+   * Validates the form data and product data before creating the invoice.
+   * Renders the updated invoice list and invoice preview.
+   */
+  async addInvoice() {
+    const formData = this.collectAndValidateFormData();
+    if (!formData) return;
+
+    const products = this.collectAndValidateProducts();
+    if (!products) return;
+
+    if (!(await this.validateInvoiceId(formData.id))) return;
+
+    try {
+      await this.createInvoiceWithProducts(formData, products);
+      this.handleSuccessfulCreation(formData);
+    } catch (error) {
+      this.notification.show('Failed to create invoice', { type: 'error' });
+    }
+  }
+
+  /**
+   * Edits an invoice by its ID
+   * Show edit form and populate it with the invoice data
+   * @param {string} id - the ID of the invoice to edit
+   */
+  async editInvoice(id) {
+    try {
+      const [invoice, products] = await Promise.all([
+        this.dataHandler.getInvoiceById(id),
+        this.dataHandler.getProductsByInvoiceId(id),
+      ]);
+
+      if (!invoice) {
+        this.notification.show('Invoice not found', { type: 'error' });
+        return;
+      }
+
+      // show edit form and populate data
+      formHandlers.showEditForm();
+      formHandlers.setFormData(invoice, this.discountPercentage);
+
+      this.populateEditForm(invoice, products);
+    } catch (error) {
+      this.notification.show('Failed to load invoice data', { type: 'error' });
+    }
+  }
+
+  populateEditForm(invoice, products) {
+    // populate product data into tbody
+    const tbody = document.querySelector(
+      '.form--edit .product-list__table .product-list__table-body',
+    );
+    // clear any existing row
+    if (tbody) {
+      tbody.innerHTML = '';
+
+      //add product row
+      products.forEach((product) => {
+        //retrieve product template
+        const row = Templates.addProductPriceCalculation(product);
+        tbody.insertAdjacentHTML('beforeend', row);
+      });
+      //update total
+      productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
+    }
+    //update preview with full invoice data + products
+    const fullInvoice = {
+      ...invoice,
+      products: products,
+    };
+    this.view.renderInvoicePreview(fullInvoice);
+  }
+
+  /**
+   * Saves changes to an existing invoice based on the form data and product data
+   * Validates form and product data before updating the invoice
+   * Render the updated invoice list and invoice preview
+   */
+  async saveChanges() {
+    const formData = this.collectAndValidateFormData();
+    if (!formData) return;
+
+    const products = this.collectAndValidateProducts();
+    if (!products) return;
+
+    try {
+      await this.updateInvoiceWithProducts(formData, products);
+      this.handleSuccessfulUpdate(formData, products);
+    } catch (error) {
+      this.notification.show('Failed to update invoice', { type: 'error' });
+    }
+  }
+
+  collectAndValidateFormData() {
+    const formData = formHandlers.collectFormData();
+    if (!formData.id) {
+      formData.id = generateInvoiceId();
+    }
+    return formData && formHandlers.validateFormData(formData) ? formData : null;
+  }
+
+  collectAndValidateProducts() {
+    const products = productHandlers.collectProductData();
+    if (products.length === 0) {
+      this.notification.show('Please add at least one product to the invoice', { type: 'warning' });
+      return null;
+    }
+    return products;
+  }
+
+  async createInvoiceWithProducts(formData, products) {
+    const invoice = await this.dataHandler.createInvoice({
+      ...formData,
+      favorite: false,
     });
+
+    await Promise.all(
+      products.map((product) =>
+        this.dataHandler.addProduct({
+          ...product,
+          invoiceId: invoice.id,
+        }),
+      ),
+    );
+
+    return invoice;
+  }
+
+  async updateInvoiceWithProducts(formData, products) {
+    const updatedInvoice = await this.dataHandler.updateInvoice(formData.id, {
+      ...formData,
+      favorite: this.invoices.find((inv) => inv.id === formData.id)?.favorite || false,
+    });
+
+    const existingProducts = await this.dataHandler.getProductsByInvoiceId(formData.id);
+    await Promise.all(
+      existingProducts.map((product) => this.dataHandler.deleteProduct(product.id)),
+    );
+    await Promise.all(
+      products.map((product) =>
+        this.dataHandler.addProduct({
+          ...product,
+          invoiceId: formData.id,
+        }),
+      ),
+    );
+
+    return updatedInvoice;
+  }
+
+  handleSuccessfulCreation(invoice) {
+    this.invoices.push(invoice);
+    this.view.renderInvoiceList(this.invoices);
+    this.view.renderInvoicePreview(invoice);
+    formHandlers.resetFormStates();
+    this.notification.show('Invoice created successfully', { type: 'success' });
+  }
+
+  handleSuccessfulUpdate(formData, products) {
+    const index = this.invoices.findIndex((inv) => inv.id === formData.id);
+    if (index !== -1) {
+      this.invoices[index] = { ...formData, products };
+      this.view.renderInvoiceList(this.invoices);
+      this.view.renderInvoicePreview(this.invoices[index]);
+      this.notification.show('Invoice updated successfully', { type: 'success' });
+      formHandlers.resetFormStates();
+    }
+  }
+
+  // Helper Methods
+  handleDiscountUpdate(newDiscount) {
+    this.discountPercentage = newDiscount;
+    const tbody = this.getActiveFormTbody();
+    if (tbody) {
+      productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
+    }
   }
 
   /**
@@ -164,6 +392,24 @@ class InvoiceController {
     rowCheckboxes.forEach((checkbox) => {
       checkbox.checked = isChecked;
     });
+  }
+
+  /**
+   * Return the tbody element of the active form (create form or edit form)
+   * @return {HTMLElement}The tbody element of the active form, or null if no form is active.
+   */
+  getActiveFormTbody() {
+    const activeForm =
+      document.querySelector('.form--create:not(.hidden)') ||
+      document.querySelector('.form--edit:not(.hidden)');
+    return activeForm?.querySelector('product-list__table tbody');
+  }
+
+  async handleMultiDeletion(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const checkedRows = this.tableBody.querySelectorAll('.table__checkbox:checked');
+    await this.handleInvoiceDeletion(Array.from(checkedRows));
   }
 
   /**
@@ -238,264 +484,23 @@ class InvoiceController {
   }
 
   /**
-   * Return the tbody element of the active form (create form or edit form)
-   * @return {HTMLElement}The tbody element of the active form, or null if no form is active.
+   *  Confirmation dialog for deleting invoices.
+   * @param {number} count - The number of invoices to delete.
+   * @param {string} [id = null] - The ID of the single invoice to delete (optional).
+   * @returns {boolean} True if the user confirms the deletion, false otherwise.
    */
-  getActiveFormTbody() {
-    const activeForm =
-      document.querySelector('.form--create:not(.hidden)') ||
-      document.querySelector('.form--edit:not(.hidden)');
-    return activeForm?.querySelector('product-list__table tbody');
-  }
+  async confirmDeletion(count, id = null) {
+    const message =
+      count > 1
+        ? `Are you sure you want to delete ${count} selected invoice(s)?`
+        : `Are you sure you want to delete invoice #${id}?`;
 
-  /**
-   * Adds a new invoice based on the form data and product data.
-   * Validates the form data and product data before creating the invoice.
-   * Renders the updated invoice list and invoice preview.
-   */
-  async addInvoice() {
-    const formData = formHandlers.collectFormData();
-    // Use the generated ID if none is provided
-    if (!formData.id) {
-      formData.id = generateInvoiceId();
-    }
-
-    if (!formData || !formHandlers.validateFormData(formData)) return;
-
-    // Validate ID uniqueness
-    const isValidId = await this.validateInvoiceId(formData.id);
-    if (!isValidId) return;
-
-    const products = productHandlers.collectProductData();
-    if (products.length === 0) {
-      this.notification.show('Please add at least one product to the invoice', { type: 'warning' });
-      return;
-    }
-
-    // Validate complete invoice data
-    const validation = this.validator.validateCompleteInvoice({
-      ...formData,
-      products,
+    return await this.notification.confirm(message, {
+      type: 'warning',
+      title: 'Delete Invoice',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
     });
-
-    if (!validation.isValid) {
-      const errorMessages = this.validator.formatValidationErrors(validation.errors);
-      errorMessages.forEach((message) => {
-        this.notification.show(message, { type: 'error' });
-      });
-      return;
-    }
-
-    // Proceed with adding invoice if validation passes
-    try {
-      const invoice = await this.dataHandler.createInvoice({
-        id: formData.id,
-        name: formData.name,
-        email: formData.email,
-        date: formData.date,
-        address: formData.address,
-        status: formData.status,
-        favorite: false,
-      });
-      const productPromises = products.map((product) =>
-        this.dataHandler.addProduct({
-          ...product,
-          invoiceId: invoice.id,
-        }),
-      );
-      await Promise.all(productPromises);
-
-      this.invoices.push(invoice);
-      this.view.renderInvoiceList(this.invoices);
-      this.view.renderInvoicePreview(invoice);
-      formHandlers.resetFormStates();
-      this.notification.show('Invoice created successfully', { type: 'success' });
-    } catch (error) {
-      this.notification.show('Fail to create invoice', { type: 'error' });
-    }
-  }
-
-  async validateInvoiceId(id, originalId = null) {
-    try {
-      // Get all existing invoices
-      const existingInvoices = await this.dataHandler.getInvoiceList();
-
-      // If we're editing (originalId exists), exclude the current invoice from the check
-      const isDuplicate = existingInvoices.some(
-        (invoice) => invoice.id === id && invoice.id !== originalId,
-      );
-
-      if (isDuplicate) {
-        this.notification.show('Invoice ID already exists. Please use a different ID.', {
-          type: 'error',
-        });
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Error validating invoice ID:', error);
-      this.notification.show('Failed to validate invoice ID', { type: 'error' });
-      return false;
-    }
-  }
-
-  /**
-   * Handles actions (edit, delete) on invoices in the invoice list.
-   *
-   * @param {Event} e - The event object.
-   */
-  async handleInvoiceActions(e) {
-    const row = e.target.closest('.table__row');
-    if (!row) return;
-
-    const idCell = row.querySelector('[data-label="Invoice Id"]');
-    if (!idCell) return;
-
-    const id = idCell.textContent;
-
-    // Handle delete button click
-    if (e.target.closest('.btn--delete')) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const popupContent = e.target.closest('.popup-content');
-      await this.handleInvoiceDeletion(e);
-      if (popupContent) {
-        popupContent.classList.remove('active');
-      }
-      return;
-    }
-
-    // Handle edit button click
-    if (e.target.closest('.btn--edit')) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.editInvoice(id);
-      const popupContent = e.target.closest('.popup-content');
-      if (popupContent) {
-        popupContent.classList.remove('active');
-      }
-      return;
-    }
-  }
-
-  /**
-   * Edits an invoice by its ID
-   * Show edit form and populate it with the invoice data
-   * @param {string} id - the ID of the invoice to edit
-   */
-  async editInvoice(id) {
-    try {
-      //get invoice from server
-      const invoice = await this.dataHandler.getInvoiceById(id);
-      if (!invoice) {
-        this.notification.show('Invoice not found', { type: 'error' });
-        return;
-      }
-      // get product data for this invoice
-      const products = await this.dataHandler.getProductsByInvoiceId(id);
-      // show edit form and populate data
-      formHandlers.showEditForm();
-      formHandlers.setFormData(invoice, this.discountPercentage);
-
-      // populate product data into tbody
-      const tbody = document.querySelector(
-        '.form--edit .product-list__table .product-list__table-body',
-      );
-      // clear any existing row
-      if (tbody) {
-        tbody.innerHTML = '';
-
-        //add product row
-        products.forEach((product) => {
-          //retrieve product template
-          const row = Templates.addProductPriceCalculation(product);
-          tbody.insertAdjacentHTML('beforeend', row);
-        });
-        //update total
-        productHandlers.updateAmounts(tbody, () => this.updatePreview(), this.discountPercentage);
-      }
-      //update preview with full invoice data + products
-      const fullInvoice = {
-        ...invoice,
-        products: products,
-      };
-      this.view.renderInvoicePreview(fullInvoice);
-    } catch (error) {
-      console.error('Error loading invoice from editing', error);
-      this.notification.show('fail to load invoice data', { type: 'error' });
-    }
-  }
-
-  /**
-   * Saves changes to an existing invoice based on the form data and product data
-   * Validates form and product data before updating the invoice
-   * Render the updated invoice list and invoice preview
-   */
-  async saveChanges() {
-    const formData = formHandlers.collectFormData();
-    const products = productHandlers.collectProductData();
-
-    if (!formData || !formHandlers.validateFormData(formData)) {
-      return;
-    }
-
-    if (products.length === 0) {
-      this.notification.show('Please add at least one product to the invoice', { type: 'warning' });
-      return;
-    }
-
-    // Validate complete invoice data
-    const validation = this.validator.validateCompleteInvoice({
-      ...formData,
-      products,
-    });
-
-    if (!validation.isValid) {
-      const errorMessages = this.validator.formatValidationErrors(validation.errors);
-      errorMessages.forEach((message) => {
-        this.notification.show(message, { type: 'error' });
-      });
-      return;
-    }
-
-    try {
-      const updatedInvoice = await this.dataHandler.updateInvoice(formData.id, {
-        ...formData,
-        favorite: this.invoices.find((inv) => (inv.id === formData.id)?.favorite || false),
-      });
-      const existingProducts = await this.dataHandler.getProductsByInvoiceId(formData.id);
-
-      await Promise.all(
-        existingProducts.map((product) => {
-          this.dataHandler.deleteProduct(product.id);
-        }),
-      );
-
-      await Promise.all(
-        products.map((product) =>
-          this.dataHandler.addProduct({
-            ...product,
-            invoiceId: formData.id,
-          }),
-        ),
-      );
-      const index = this.invoices.findIndex((inv) => inv.id === formData.id);
-      if (index !== -1) {
-        this.invoices[index] = {
-          ...updatedInvoice,
-          products: products,
-        };
-      }
-      this.view.renderInvoiceList(this.invoices);
-      this.view.renderInvoicePreview(this.invoices[index]);
-      this.notification.show('Invoice updated successfully', { type: 'success' });
-      formHandlers.resetFormStates();
-    } catch (error) {
-      console.error('Error updating invoice', error);
-      this.notification.show('Fail to update invoice', { type: 'error' });
-    }
   }
 
   /**
@@ -509,7 +514,6 @@ class InvoiceController {
     const products = productHandlers.collectProductData();
 
     try {
-      // Only create preview if there are products or the form is actively being edited
       if (products.length > 0 || document.querySelector('.form--edit:not(.hidden)')) {
         const tempInvoice = new Invoice(
           formData.id,
@@ -522,53 +526,11 @@ class InvoiceController {
         );
         this.view.renderInvoicePreview(tempInvoice);
       } else {
-        // Clear the preview if there are no products
         this.view.clearInvoicePreview();
       }
     } catch (error) {
       console.error('Error updating preview:', error);
     }
   }
-
-  /**
-   * Sets up the search functionality for invoices
-   */
-  setupSearchInvoice() {
-    const searchInput = document.querySelector('.search__input');
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
-    }
-  }
-
-  /**
-   * Handles the search functionality
-   * @param {string} searchInput - the search term entered by user
-   */
-
-  handleSearch(searchInput) {
-    if (!searchInput) {
-      this.view.renderInvoiceList(this.invoices);
-      return;
-    }
-    const formatSearchInput = searchInput.toLowerCase().trim();
-    const filteredInvoices = this.invoices.filter((invoice) => {
-      return (
-        //Search by ID
-        invoice.id.toLowerCase().includes(formatSearchInput) ||
-        //Search by name
-        invoice.name.toLowerCase().includes(formatSearchInput) ||
-        //Search by email
-        invoice.email.toLowerCase().includes(formatSearchInput) ||
-        // Search by date
-        invoice.date.toLowerCase().includes(formatSearchInput) ||
-        //Search by status
-        invoice.status.toLowerCase().includes(formatSearchInput)
-      );
-    });
-    this.view.renderInvoiceList(filteredInvoices);
-    //Update header checkbox after filtering
-    this.view.updateHeaderCheckbox();
-  }
 }
-
 export default InvoiceController;

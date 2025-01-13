@@ -242,7 +242,7 @@
   display: flex;
   justify-content: space-between;
   background-color: var(--secondary-bg-color);
-  padding-right: 1.5rem;
+
   border-radius: 1rem;
 }
 
@@ -287,7 +287,6 @@
 }
 
 .form__group-input {
-  min-width: 24rem;
   margin-top: 1rem;
   padding: 1.7rem;
   background-color: var(--secondary-bg-color);

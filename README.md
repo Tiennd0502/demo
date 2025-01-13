@@ -35,11 +35,11 @@ Deploy to the hosting
 ## Prerequisite
 Visual Studio Code latest version 1.95.1.
 
-Node.js v22.12.0
+Node.js v20.18.1
 
 Parcel bundler version [2.13.3]
 
-ESlint version[7.32.0]
+ESlint version[8.2.0]
 
 Prettier version [3.4.2]
 
@@ -50,7 +50,7 @@ Clone the project:
 ```
 https://github.com/luanvu-agilityio/javascript-training.git
 ```
-Checkout to branch feat/big-practice
+Checkout to branch feat/practice
 ```
 git checkout feat/javascript-practice
 ```
@@ -62,12 +62,15 @@ Install node module:
 ```
 npm install
 ```
-Run the app:
-
+Install JSON server:
 ```
-npm run start index.html
+npm install -g json-server
 ```
-Server running at http://localhost:1234
+Run JSON server:
+```
+json-server --watch db.json
+```
+Server running at http://localhost:3000
 ## Contributing
 I welcome any and all contribution! If you have found or encountered any bugs or issues, please let me know. Any recommendation is also welcomed.
 
@@ -78,6 +81,6 @@ I welcome any and all contribution! If you have found or encountered any bugs or
 
 [Practice plan](https://docs.google.com/document/d/1WNsq6QzjSLZf-jB3QkaUE6xg44tWFaTRoyxqBrePeqE/edit?tab=t.0)
 
-[Vercel] to be updated
+[Vercel](https://javascript-training-luanvu.vercel.app/)
 ###
 Special thanks to my mentor Mr. Minh Tran and my supporter Mr. Thinh Nguyen who provide me all the useful help and support throughout my training session. It is my pleasure to work with you guys!

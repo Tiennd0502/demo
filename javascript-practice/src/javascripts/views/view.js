@@ -1,5 +1,5 @@
 import Templates from '../templates/templates.js';
-import InvoiceController from '../controllers/invoice.js';
+import { updateInvoiceIdPlaceholder } from '../helpers/invoice-id-utils.js';
 
 /**
  * This class handles the rendering of invoices in the view, including the invoice list and invoice preview.
@@ -8,6 +8,59 @@ class InvoiceView {
   constructor() {
     this.invoiceList = document.querySelector('.table__body');
     this.previewSection = document.querySelector('.preview');
+    this.headerCheckbox = document.querySelector('.table__head .checkbox');
+    this.tableBody = document.querySelector('.table__body');
+    this.setupPopupMenu();
+  }
+
+  /**
+   * Update the state of the header checkbox base on the individual checkboxes
+   * If all checkboxes are checked, header checkbox will be checked and vice versa
+   */
+  updateHeaderCheckbox() {
+    const totalRows = this.tableBody.querySelectorAll('.table__checkbox').length;
+    const checkedRows = this.tableBody.querySelectorAll(`${'.table__checkbox'}:checked`).length;
+
+    this.headerCheckbox.checked = totalRows > 0 && totalRows === checkedRows;
+  }
+
+  /**
+   * Setup event listener to hide popup when user uses specific actions
+   */
+  setupPopupMenu() {
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.popup-menu')) {
+        const activePopups = document.querySelectorAll('.popup-content.active');
+        activePopups.forEach((popup) => popup.classList.remove('active'));
+      }
+
+      if (e.target.closest('.btn-trigger')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const popup = e.target.closest('.table__row').querySelector('.popup-content');
+        popup?.classList.toggle('active');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        const activePopups = document.querySelectorAll('.popup-content.active');
+        activePopups.forEach((popup) => popup.classList.remove('active'));
+      }
+    });
+  }
+
+  /**
+   * Renders the create and edit forms using templates.
+   */
+  renderForms() {
+    const formContainer = document.querySelector('.form-container');
+    if (formContainer) {
+      formContainer.innerHTML = Templates.genericForm('create') + Templates.genericForm('edit');
+    }
+    updateInvoiceIdPlaceholder();
   }
 
   /**
@@ -91,6 +144,31 @@ class InvoiceView {
       .join('');
 
     previewTbody.innerHTML = productRows;
+  }
+
+  /**
+   * Setup favi=orite icon click handler
+   * @param {Function} onFavoriteToggle - callback to handle favorite state update
+   */
+
+  setupFavoriteHandler(onFavoriteToggle) {
+    this.invoiceList.addEventListener('click', (e) => {
+      const favoriteIcon = e.target.closest('.favorite-icon-inactive, .favorite-icon-active');
+      if (!favoriteIcon) return;
+
+      const isActive = favoriteIcon.classList.contains('favorite-icon-active');
+      const row = favoriteIcon.closest('.table__row');
+      const invoiceId = row.querySelector('[data-label="Invoice Id"]').textContent;
+
+      favoriteIcon.src = isActive
+        ? './assets/images/icons/main-view-icons/favorite-icon-inactive.svg'
+        : './assets/images/icons/main-view-icons/favorite-icon-active.svg';
+
+      favoriteIcon.classList.toggle('favorite-icon-inactive', isActive);
+      favoriteIcon.classList.toggle('favorite-icon-active', !isActive);
+
+      onFavoriteToggle(invoiceId, !isActive);
+    });
   }
 }
 export default InvoiceView;

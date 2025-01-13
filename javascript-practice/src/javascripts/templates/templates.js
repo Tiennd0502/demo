@@ -15,7 +15,8 @@ const Templates = {
     <div class="form-grid">
       <div class="form__group">
         <label class="form__group-label">Invoice ID</label>
-        <input 
+        <input
+          name="invoice-id" 
           class="form__group-input" 
           type="text" 
           ${type === 'create' ? 'placeholder="Loading..." data-auto-id="true"' : 'placeholder="#876370"'}

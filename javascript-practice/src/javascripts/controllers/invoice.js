@@ -6,8 +6,7 @@ import NotificationUtils from '../helpers/notification-utils.js';
 import DataHandler from '../data-handler.js';
 import * as formHandlers from './form-handlers.js';
 import * as productHandlers from './product-handlers.js';
-import { initializeMobileSort } from '../helpers/mobile-sort.js';
-
+import { sortHandlers } from './sort-handler.js';
 import { generateInvoiceId, updateInvoiceIdPlaceholder } from '../helpers/invoice-id-utils.js';
 
 /**
@@ -39,32 +38,18 @@ class InvoiceController {
    */
   init() {
     this.loadInvoices();
-    this.renderForms();
-    this.setupSortHandlers();
     this.setupSearchInvoice();
     this.setupEventListeners();
-    this.setupFavoriteHandler();
-    initializeMobileSort();
   }
 
   async loadInvoices() {
     try {
       this.invoices = await this.dataHandler.getInvoiceList();
       this.view.renderInvoiceList(this.invoices);
+      sortHandlers(this.invoices, (sortedInvoices) => this.view.renderInvoiceList(sortedInvoices));
     } catch (error) {
       this.notification.show('Fail to load invoices', { type: 'error' });
     }
-  }
-
-  /**
-   * Renders the create and edit forms using templates.
-   */
-  renderForms() {
-    const formContainer = document.querySelector('.form-container');
-    if (formContainer) {
-      formContainer.innerHTML = Templates.genericForm('create') + Templates.genericForm('edit');
-    }
-    updateInvoiceIdPlaceholder();
   }
 
   /**
@@ -84,12 +69,10 @@ class InvoiceController {
         this.handleInvoiceActions(e);
       },
       { capture: true },
-    ); // Use capture phase to handle event first
-
+    );
+    this.view.renderForms();
     this.setupAddInvoiceButton();
     this.setupSaveChangeButton();
-
-    this.setupPopupMenu();
     this.setupMultipleInvoiceDeletion();
 
     formHandlers.setupFormEventListeners((newDiscount) => {
@@ -125,38 +108,6 @@ class InvoiceController {
     document
       .querySelector('.form--edit .form__action-buttons--button-save')
       .addEventListener('click', () => this.saveChanges());
-  }
-
-  /**
-   * Setup event listener to hide popup when user uses specific actions
-   */
-  setupPopupMenu() {
-    // Single event delegation handler for all popups
-    document.addEventListener('click', (e) => {
-      // Close any active popups when clicking outside
-      if (!e.target.closest('.popup-menu')) {
-        const activePopups = document.querySelectorAll('.popup-content.active');
-        activePopups.forEach((popup) => popup.classList.remove('active'));
-      }
-
-      // Toggle popup when trigger is clicked
-      if (e.target.closest('.btn-trigger')) {
-        e.preventDefault();
-        e.stopPropagation();
-        const popup = e.target.closest('.table__row').querySelector('.popup-content');
-        popup?.classList.toggle('active');
-      }
-    });
-
-    // Close popup on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        e.stopPropagation();
-        const activePopups = document.querySelectorAll('.popup-content.active');
-        activePopups.forEach((popup) => popup.classList.remove('active'));
-      }
-    });
   }
 
   /**
@@ -279,7 +230,7 @@ class InvoiceController {
 
       // Update view after any type of deletion
       this.view.renderInvoiceList(this.invoices);
-      this.updateHeaderCheckbox();
+      this.view.updateHeaderCheckbox();
     } catch (error) {
       console.error('Error deleting invoice(s):', error);
       this.notification.show('Failed to delete invoice(s)', { type: 'error' });
@@ -427,17 +378,6 @@ class InvoiceController {
       }
       return;
     }
-  }
-
-  /**
-   * Update the state of the header checkbox base on the individual checkboxes
-   * If all checkboxes are checked, header checkbox will be checked and vice versa
-   */
-  updateHeaderCheckbox() {
-    const totalRows = this.tableBody.querySelectorAll('.table__checkbox').length;
-    const checkedRows = this.tableBody.querySelectorAll(`${'.table__checkbox'}:checked`).length;
-
-    this.headerCheckbox.checked = totalRows > 0 && totalRows === checkedRows;
   }
 
   /**
@@ -627,107 +567,7 @@ class InvoiceController {
     });
     this.view.renderInvoiceList(filteredInvoices);
     //Update header checkbox after filtering
-    this.updateHeaderCheckbox();
-  }
-
-  setupSortHandlers() {
-    const tableHeaders = document.querySelectorAll('.table__header[data-field]');
-    let currentSortField = null;
-    let currentSortOrder = null;
-
-    tableHeaders.forEach((header) => {
-      header.addEventListener('click', (e) => {
-        // Close any open popups when sorting
-        const activePopups = document.querySelectorAll('.popup-content.active');
-        activePopups.forEach((popup) => popup.classList.remove('active'));
-
-        const field = header.getAttribute('data-field');
-        if (!field) return;
-
-        let newOrder;
-        if (field === currentSortField) {
-          newOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
-        } else {
-          newOrder = 'asc';
-        }
-
-        this.updateSortIcon(header, newOrder);
-
-        currentSortField = field;
-        currentSortOrder = newOrder;
-        const sortedInvoices = this.sortInvoices(field, newOrder);
-        this.view.renderInvoiceList(sortedInvoices);
-      });
-    });
-  }
-
-  updateSortIcon(activeHeader, order) {
-    //Clear the current sort state
-    const sortIcons = document.querySelectorAll('.sort-icon');
-    sortIcons.forEach((icon) => {
-      icon.classList.remove('ascending', 'descending');
-    });
-    // add icon based on current order
-    const activeIcon = activeHeader.querySelector('.sort-icon');
-    if (activeIcon) {
-      activeIcon.classList.add(order === 'asc' ? 'ascending' : 'descending');
-    }
-  }
-
-  sortInvoices(field, order = 'asc') {
-    //Avoid mutating original data
-    const sortedInvoices = [...this.invoices];
-    //Sort based on field and order
-    sortedInvoices.sort((a, b) => {
-      let valA = a[field];
-      let valB = b[field];
-
-      // Handle null or undefined values
-      if (valA == null) valA = '';
-      if (valB == null) valB = '';
-
-      //Special handling for date type data
-      if (field === 'date') {
-        valA = new Date(valA).getTime();
-        valB = new Date(valB).getTime();
-        return order === 'asc' ? valA - valB : valB - valA;
-      }
-      //format string type
-      if (typeof valA === 'string') {
-        valA = valA.toLowerCase();
-        valB = valB.toLowerCase();
-      }
-      //Sort logic
-      if (valA < valB) return order === 'asc' ? -1 : 1;
-      if (valA > valB) return order === 'asc' ? 1 : -1;
-      return 0;
-    });
-    return sortedInvoices;
-  }
-
-  setupFavoriteHandler() {
-    this.view.invoiceList.addEventListener('click', (e) => {
-      const favoriteIcon = e.target.closest('.favorite-icon-inactive, .favorite-icon-active');
-      //Toggle favorite state
-      if (!favoriteIcon) return;
-      const isActive = favoriteIcon.classList.contains('favorite-icon-active');
-      const row = favoriteIcon.closest('.table__row');
-      const invoiceId = row.querySelector('[data-label="Invoice Id"]').textContent;
-
-      //Update icon src and classname
-      favoriteIcon.src = isActive
-        ? './assets/images/icons/main-view-icons/favorite-icon-inactive.svg'
-        : './assets/images/icons/main-view-icons/favorite-icon-active.svg';
-
-      favoriteIcon.classList.toggle('favorite-icon-inactive', isActive);
-      favoriteIcon.classList.toggle('favorite-icon-active', !isActive);
-
-      //Update invoice data
-      const invoice = this.invoices.find((inv) => inv.id === invoiceId);
-      if (invoice) {
-        invoice.favorite = !isActive;
-      }
-    });
+    this.view.updateHeaderCheckbox();
   }
 }
 

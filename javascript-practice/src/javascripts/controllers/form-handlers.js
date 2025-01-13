@@ -112,7 +112,7 @@ export function collectFormData() {
   if (!activeForm) return null;
   const isEditForm = activeForm.classList.contains('form--edit');
 
-  const idInput = activeForm.querySelector('input[placeholder="#876370"]');
+  const idInput = activeForm.querySelector('.form__group-input, input[name="invoice-id"]');
   const idValue = isEditForm
     ? idInput.value
     : idInput.value || idInput.placeholder || generateInvoiceId();

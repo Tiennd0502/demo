@@ -6,6 +6,8 @@ import NotificationUtils from '../helpers/notification-utils.js';
 import DataHandler from '../data-handler.js';
 import * as formHandlers from './form-handlers.js';
 import * as productHandlers from './product-handlers.js';
+import { initializeMobileSort } from '../helpers/mobile-sort.js';
+
 import { generateInvoiceId, updateInvoiceIdPlaceholder } from '../helpers/invoice-id-utils.js';
 
 /**
@@ -42,6 +44,7 @@ class InvoiceController {
     this.setupSearchInvoice();
     this.setupEventListeners();
     this.setupFavoriteHandler();
+    initializeMobileSort();
   }
 
   async loadInvoices() {

@@ -69,17 +69,30 @@ img {
   --font-weight-bold: 700;
 
   /* colors */
-  --primary-text-color: #06152b;
-  --secondary-text-color: #03a89e;
-  --tertiary-text-color: #ff69b4;
-  --other-text-color: #3a36db;
+  --black-color: #06152b;
+  --blue-green-color: #03a89e;
+  --red-pink-color: #ff69b4;
+  --deep-blue-color: #3a36db;
+  --white-color: #ffffff;
+  --gray-color: #64748b;
 
   --primary-bg-color: #ffffff;
   --secondary-bg-color: #f1f4fa;
 
-  --primary-button-color: #3a36db;
-  --secondary-button-color: #03a89e;
-  --tertiary-button-color: #ff69b4;
+  --success: #4caf50;
+  --error: #f44336;
+  --warning: #ff9800;
+  --info: #2196f3;
+
+  /* space */
+  --space-4: 0.4rem;
+  --space-8: 0.8rem;
+  --space-16: 1.6rem;
+  --space-24: 2.4rem;
+  --space-32: 3.2rem;
+  --space-48: 4.8rem;
+  --space-64: 6.4rem;
+  --space-128: 12.8rem;
 }
 
 .wrapper {

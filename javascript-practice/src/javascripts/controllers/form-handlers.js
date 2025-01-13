@@ -1,4 +1,5 @@
 import NotificationUtils from '../helpers/notification-utils.js';
+import { generateInvoiceId } from '../helpers/invoice-id-utils.js';
 /**
  * Setup event listener for any form related actions
  * @param {Function} onDiscountChange - callback function to handle discount input changes

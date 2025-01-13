@@ -18,9 +18,9 @@ const Templates = {
         <input 
           class="form__group-input" 
           type="text" 
-          placeholder="#876370"
+          ${type === 'create' ? 'placeholder="Loading..." data-auto-id="true"' : 'placeholder="#876370"'}
           disabled
-          data-auto-id="true" />
+          />
       </div>
       <div class="form__group">
         <label class="form__group-label">Date</label>
@@ -119,7 +119,13 @@ const Templates = {
 
   <div class="preview__content">
     <div class="preview__customer">
-      <div class="preview__customer-logo">J</div>
+      <div class="preview__customer-logo">
+        <img 
+          class="preview__recipient-logo"
+          src="./assets/images/recipient-logo.png"
+          alt="recipient logo"
+        />
+      </div>
       <div class="preview__customer-info">
         <div class="preview__customer-email">
           &#64; <span class="email-address">your.mail@gmail.com</span>

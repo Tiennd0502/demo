@@ -63,7 +63,7 @@ class InvoiceView {
       this.clearInvoicePreview();
       return;
     }
-    this.previewSection.querySelector('.preview__invoice-label--id').innerHTML = `Invoice No: <br/>
+    this.previewSection.querySelector('.preview__invoice-label--id').innerHTML = `Invoice ID: <br/>
       <span>${invoice.id}</span>`;
     this.previewSection.querySelector('.preview-company__email .email-address').innerHTML =
       invoice.email;

@@ -6,6 +6,7 @@ import NotificationUtils from '../helpers/notification-utils.js';
 import DataHandler from '../data-handler.js';
 import * as formHandlers from './form-handlers.js';
 import * as productHandlers from './product-handlers.js';
+import { generateInvoiceId, updateInvoiceIdPlaceholder } from '../helpers/invoice-id-utils.js';
 
 /**
  * This class handles the main logic for managing invoices, including rendering forms,
@@ -60,6 +61,7 @@ class InvoiceController {
     if (formContainer) {
       formContainer.innerHTML = Templates.genericForm('create') + Templates.genericForm('edit');
     }
+    updateInvoiceIdPlaceholder();
   }
 
   /**
@@ -96,6 +98,12 @@ class InvoiceController {
     });
 
     productHandlers.setupProductListHandlers(() => this.updatePreview());
+
+    //add listener for create form button to update id
+    document.querySelector('.btn--primary').addEventListener('click', () => {
+      formHandlers.showCreateForm();
+      updateInvoiceIdPlaceholder();
+    });
   }
 
   /**
@@ -293,6 +301,11 @@ class InvoiceController {
    */
   async addInvoice() {
     const formData = formHandlers.collectFormData();
+    // Use the generated ID if none is provided
+    if (!formData.id) {
+      formData.id = generateInvoiceId();
+    }
+
     if (!formData || !formHandlers.validateFormData(formData)) return;
 
     // Validate ID uniqueness

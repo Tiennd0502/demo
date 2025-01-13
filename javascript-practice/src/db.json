@@ -1,121 +1,57 @@
 {
   "invoices": [
     {
-      "id": "33333333333",
-      "name": "aaaaaxxxx",
-      "email": "aaaaa@gmail.com",
+      "id": "INV-25-01-9494",
+      "name": "Alex T",
+      "email": "alext@gmail.com",
       "date": "2024-12-30",
-      "address": "1231 asdasdasda",
-      "status": "Complete"
-    },
-    {
-      "id": "11111111222222",
-      "name": "An Tranaaaddddddd",
-      "email": "antran@gmail.com",
-      "date": "2025-01-08",
-      "address": "135 Nguyen Hue aaaa",
-      "status": "Pending"
-    },
-    {
-      "id": "3333333",
-      "name": "aaaaadd",
-      "email": "asasds@gmail.com",
-      "date": "2025-01-01",
-      "address": "1234141",
-      "status": "Cancel"
-    },
-    {
-      "id": "INV-1736699071091",
-      "name": "aaaaaa",
-      "email": "1231@adasda.com",
-      "date": "2024-12-01",
-      "address": "12312",
-      "status": "Complete"
-    },
-    {
-      "id": "INV-1736732149982",
-      "name": "aaaaa",
-      "email": "aaa@gmail.com",
-      "date": "2024-12-31",
-      "address": "123 asdc",
-      "status": "Cancel",
-      "favorite": false
-    },
-    {
-      "id": "1234455",
-      "name": "aaaa",
-      "email": "aaaa@gmail.com",
-      "date": "2025-01-01",
-      "address": "123 aaaaaaaaa",
+      "address": "112 Delta st",
       "status": "Complete",
       "favorite": false
     },
     {
-      "id": "#876370",
-      "name": "Alison G",
-      "email": "alisiong@gmail.com",
-      "date": "2024-12-30",
-      "address": "123 hochiminh",
+      "id": "INV-25-01-6999",
+      "name": "Easin Arafat",
+      "email": "easinarafat@gmail.com",
+      "date": "2025-01-07",
+      "address": "123 Bellinham",
       "status": "Cancel",
+      "favorite": false
+    },
+    {
+      "id": "INV-25-01-8192",
+      "name": "Jonathan M",
+      "email": "jonathanm@gmail.com",
+      "date": "2024-12-29",
+      "address": "123 Clause Ave",
+      "status": "Pending",
       "favorite": false
     }
   ],
   "products": [
     {
-      "id": "3e06",
-      "name": "cc",
-      "rate": 11,
-      "quantity": 111,
-      "amount": 1221,
-      "invoiceId": "INV-1736699071091"
+      "id": "e3c7",
+      "name": "monitor",
+      "rate": 2200,
+      "quantity": 1,
+      "amount": 2200,
+      "invoiceId": "INV-25-01-9494"
     },
     {
-      "id": "cb54",
-      "name": "ttt",
-      "rate": 22,
-      "quantity": 22,
-      "amount": 484,
-      "invoiceId": "33333333333"
-    },
-    {
-      "id": "7c63",
-      "name": "aa",
-      "rate": 22,
-      "quantity": 33,
-      "amount": 726,
-      "invoiceId": "11111111222222"
-    },
-    {
-      "id": "272a",
-      "name": "sss",
-      "rate": 22,
-      "quantity": 22,
-      "amount": 484,
-      "invoiceId": "INV-1736732149982"
-    },
-    {
-      "id": "0eb7",
-      "name": "dsdss",
-      "rate": 22,
-      "quantity": 22,
-      "amount": 484,
-      "invoiceId": "1234455"
-    },
-    {
-      "id": "32aa",
-      "name": "rrrr",
-      "rate": 221,
-      "quantity": 111,
-      "amount": 24531,
-      "invoiceId": "3333333"
-    },
-    {
-      "id": "86f6",
-      "name": "beer",
-      "rate": 200,
+      "id": "b6bb",
+      "name": "tv",
+      "rate": 500,
       "quantity": 2,
-      "amount": 400,
-      "invoiceId": "#876370"
+      "amount": 1000,
+      "invoiceId": "INV-25-01-6999"
+    },
+    {
+      "id": "cfde",
+      "name": "pc",
+      "rate": 2000,
+      "quantity": 1,
+      "amount": 2000,
+      "invoiceId": "INV-25-01-8192"
     }
   ]
 }

@@ -497,6 +497,10 @@ class InvoiceController {
     const formData = formHandlers.collectFormData();
     const products = productHandlers.collectProductData();
 
+    if (!formData || !formHandlers.validateFormData(formData)) {
+      return;
+    }
+
     if (products.length === 0) {
       this.notification.show('Please add at least one product to the invoice', { type: 'warning' });
       return;
@@ -518,12 +522,7 @@ class InvoiceController {
 
     try {
       const updatedInvoice = await this.dataHandler.updateInvoice(formData.id, {
-        id: formData.id,
-        name: formData.name,
-        email: formData.email,
-        date: formData.date,
-        address: formData.address,
-        status: formData.status,
+        ...formData,
         favorite: this.invoices.find((inv) => (inv.id === formData.id)?.favorite || false),
       });
       const existingProducts = await this.dataHandler.getProductsByInvoiceId(formData.id);

@@ -903,12 +903,8 @@
 .sort-icon--mobile {
   width: 1.5rem;
   height: 1.5rem;
-  transform: rotate(180deg);
 }
 
-.sort-icon--mobile.active {
-  transform: rotate(0deg);
-}
 /* Mobile styles */
 
 @media screen and (max-width: 1440px) {

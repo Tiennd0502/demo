@@ -5,7 +5,7 @@ function setupMobileSortDropdown() {
   const dropdownButton = document.querySelector('.sort-dropdown__button');
   const dropdownMenu = document.querySelector('.sort-dropdown__menu');
   const dropdownOptions = document.querySelectorAll('.sort-dropdown__option');
-  const selectedText = dropdownButton.querySelector('.sort-dropdown__selected');
+
   const sortIcon = dropdownButton.querySelector('.sort-icon--mobile');
 
   // Keep track of current sort state
@@ -36,7 +36,7 @@ function setupMobileSortDropdown() {
     //Toggle sort order
     currentSort.order = currentSort.sort === 'asc' ? 'desc' : 'asc';
     //Update icon rotation based on sort order
-    sortIcon.style.transform = currentSort.order === 'asc' ? 'rotate(0deg)' : 'rotate(180deg';
+    sortIcon.style.transform = currentSort.order === 'asc' ? 'rotate(0deg)' : 'rotate(180deg)';
     //Trigger sort on current field
     const tableHeader = document.querySelector(`.table__header[data-field="${currentSort.field}"]`);
     if (tableHeader) {

@@ -2,7 +2,7 @@
 .sidebar {
   min-width: 22rem;
   background-color: var(--primary-bg-color);
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
 }
 
@@ -110,6 +110,24 @@
   opacity: 0.5;
 }
 
+.sidebar-toggle {
+  display: none;
+}
+
+.sidebar-toggle-label {
+  display: none;
+  position: fixed;
+  bottom: 4rem;
+  right: 1rem;
+  width: 3rem;
+  height: 3rem;
+  background: var(--primary-bg-color);
+  border-radius: 50%;
+  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 1000;
+}
+
 /* Button components */
 .btn {
   display: flex;
@@ -141,9 +159,9 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 26px;
+  font-size: var(--font-size-26);
   opacity: 0.3;
-  border-radius: 4px;
+  border-radius: var(--space-4);
   margin-bottom: 1.5rem;
 }
 
@@ -162,7 +180,7 @@
   padding: 0.5rem;
   border: none;
   background: var(--primary-bg-color);
-  border-radius: 8px;
+  border-radius: var(--space-8);
   color: var(--gray-color);
   cursor: pointer;
 }
@@ -183,7 +201,7 @@
   padding: 1.25rem;
   background-color: var(--primary-bg-color);
   color: var(--deep-blue-color);
-  border: 1px solid rgba(58, 54, 219, 0.1);
+  border: 0.1rem solid rgba(58, 54, 219, 0.1);
 }
 
 .form__action-buttons--button-create,
@@ -199,7 +217,7 @@
 
 .sort-dropdown__button {
   width: 100%;
-  padding: 12px 16px;
+  padding: 1.2rem 1.6rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -207,7 +225,7 @@
   background-color: var(--blue-green-color);
   color: var(--white-color);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--space-8);
   cursor: pointer;
   font-size: var(--font-size-14);
 }
@@ -228,7 +246,7 @@
   background: var(--white-color);
   border-radius: var(--space-8);
   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border: 0.1rem solid #e2e8f0;
 
   min-width: 11rem;
   z-index: 1000;
@@ -286,7 +304,6 @@
   background-color: var(--primary-bg-color);
 }
 /* Status */
-
 .status {
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
@@ -354,7 +371,7 @@
   padding: 1.25rem;
   background-color: var(--primary-bg-color);
   color: var(--deep-blue-color);
-  border: 1px solid rgba(58, 54, 219, 0.1);
+  border: 0.1rem solid rgba(58, 54, 219, 0.1);
 }
 
 .form__action-buttons--button-create,
@@ -516,17 +533,249 @@
 }
 
 /* Sort icon */
+/* desktop */
 .sort-icon {
   cursor: pointer;
-  margin-left: 5px;
+  margin-left: 0.5rem;
 }
+
 .sort-icon::after {
   content: '▲';
   display: inline-block;
 }
+
 .sort-icon.descending::after {
   content: '▼';
 }
+
+/* mobile sort */
+.mobile-sort {
+  display: none;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.sort-dropdown {
+  position: relative;
+  width: 16rem;
+}
+
+.sort-dropdown__icon {
+  transition: transform 0.2s ease;
+}
+
+.sort-dropdown.active .sort-dropdown__icon {
+  transform: rotate(180deg);
+}
+
+.sort-dropdown__menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  background-color: var(--primary-bg-color);
+  border-radius: 0.8rem;
+  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.sort-dropdown__menu.active {
+  display: block;
+}
+
+.sort-dropdown__option {
+  width: 100%;
+  padding: 1.2rem 1.6rem;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: var(--font-size-14);
+  color: var(--black-color);
+}
+
+.sort-dropdown__option:hover {
+  background-color: var(--secondary-bg-color);
+}
+
+.sort-icon--mobile {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Create, edit invoice section */
+.content {
+  flex: 1;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 3rem;
+}
+
+.form--create,
+.form--edit {
+  flex: 1;
+  background-color: var(--primary-bg-color);
+  border-radius: 1rem;
+  padding: 3rem;
+  box-shadow: 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+}
+
+.form__header-title {
+  margin-bottom: 2rem;
+  font-size: var(--font-size-26);
+  font-weight: var(--font-weight-bold);
+}
+
+.form__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form__header-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.form__header-close:hover {
+  opacity: 0.8;
+}
+
+.form__header-close img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.form__camera {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4rem auto;
+  width: 14rem;
+  height: 14rem;
+  background-color: var(--secondary-bg-color);
+  border-radius: 50%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form__group:nth-child(2) {
+  justify-content: space-between;
+}
+
+.form__group:nth-child(5) {
+  grid-column: 1 / -1;
+}
+
+.form__group-address {
+  display: flex;
+  background-color: var(--secondary-bg-color);
+  margin-top: 1rem;
+
+  border-radius: 1rem;
+}
+.form__group-date {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--secondary-bg-color);
+
+  border-radius: 1rem;
+}
+
+.form__group-date .form__group-input {
+  margin-top: 0;
+}
+.form__group:nth-child(5) .form__group-input {
+  flex: 1;
+}
+
+.form__group:nth-child(2) .form__group-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  height: auto;
+  width: auto;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+}
+
+.form__group:nth-child(2) .form__group-input {
+  flex: 1;
+  position: relative;
+}
+
+.form__group-address-icon {
+  padding-right: 1.7rem;
+}
+
+.form__group-address .form__group-input {
+  margin-top: 0;
+}
+
+.form__group-label {
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-medium);
+  color: var(--black-color);
+}
+
+.form__group-input {
+  margin-top: 1rem;
+  padding: 1.7rem;
+  background-color: var(--secondary-bg-color);
+  border-radius: 1rem;
+  border: none;
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-regular);
+  transition: border-color 0.3s ease;
+}
+
+.form__group-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.form__group-input--select {
+  appearance: none;
+  background-image: url('../assets/images/icons/create-invoice-modal-icons/down-arrow-icon.png');
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.form__group-input--select:focus {
+  outline: none;
+  border-color: var(--blue-green-color);
+  box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.1);
+}
+
+/* Status dropdown options */
+.form__group-input--select option {
+  padding: var(--space-8);
+  font-size: 1.2rem;
+}
+
 @media screen and (max-width: 768px) {
   .btn-trigger {
     display: none;

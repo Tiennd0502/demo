@@ -8,7 +8,9 @@ class DataHandler {
    */
   async getInvoiceList() {
     try {
+      console.log('Requesting URL:', `${this.rootUrl}/invoices`);
       const response = await fetch(`${this.rootUrl}/invoices`);
+      console.log('Response status:', response.status);
       if (!response.ok) throw new Error('Fail to fetch invoices');
       return await response.json();
     } catch (error) {
@@ -34,13 +36,21 @@ class DataHandler {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+
+          Accept: 'application/json',
         },
         body: JSON.stringify(invoice),
       });
-      if (!response.ok) throw new Error('Fail to create invoice');
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Server error response:', errorText);
+        throw new Error(`Failed to create invoice: ${response.status} ${errorText}`);
+      }
+
       return await response.json();
     } catch (error) {
-      console.error('Error creating invoice', error);
+      console.error('Error creating invoice:', error);
       throw error;
     }
   }

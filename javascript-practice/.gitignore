@@ -8,4 +8,5 @@ exercise/
 .env.development
 .env.production
 .env.local
-config.js
+
+.vercel

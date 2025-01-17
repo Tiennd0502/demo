@@ -81,6 +81,33 @@
   color: var(--red-pink-color);
 }
 
+/* Add disabled state styles for sidebar menu items */
+.sidebar__menu-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sidebar__menu-item.disabled .sidebar__menu-link {
+  pointer-events: none;
+}
+
+.sidebar__menu-item.disabled:hover .sidebar__menu-icon {
+  background-color: transparent;
+}
+
+.sidebar__menu-item.disabled:hover .sidebar__menu-text {
+  color: rgba(6, 21, 43, 0.5);
+}
+
+/* Update active state styles */
+.sidebar__menu-item.active .sidebar__menu-icon {
+  background-color: rgba(58, 54, 219, 0.1);
+}
+
+.sidebar__menu-item.active .sidebar__menu-text {
+  color: var(--deep-blue-color);
+}
+
 .user-profile {
   position: absolute;
   display: flex;
@@ -128,6 +155,10 @@
   line-height: 2.083rem;
 }
 
+.btn:last-child {
+  margin-bottom: 0;
+}
+
 .btn--primary {
   color: var(--white-color);
   background-color: var(--deep-blue-color);
@@ -143,14 +174,23 @@
   cursor: pointer;
   font-size: 26px;
   opacity: 0.3;
+  padding: 8px 12px;
   border-radius: 4px;
-  margin-bottom: 1.5rem;
+  transition: opacity 0.2s;
 }
 
 .btn-trigger:hover {
   opacity: 1;
 }
 
+/* Disabled button styles */
+.form__action-buttons--button-send.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* product list */
 .product-list__action-button--button-add {
   padding: 0.5rem 0.9rem;
   background-color: var(--deep-blue-color);
@@ -218,30 +258,41 @@
   display: inline-block;
 }
 
-.popup-content {
-  position: absolute;
-  right: 0;
-  top: 100%;
-
-  padding: 1rem;
-  margin-top: var(--space-4);
-  background: var(--white-color);
-  border-radius: var(--space-8);
-  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
-
-  min-width: 11rem;
-  z-index: 1000;
+.popup-backdrop {
   display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
+
+/* Popup Content */
+.popup-content {
+  display: none;
+  position: absolute;
+  right: -200%;
+  width: 18rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  z-index: 999;
 }
 
 .popup-content.active {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  animation: popupFade 0.2s ease-out;
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .popup-menu:focus-within .popup-content,
@@ -250,19 +301,19 @@
 }
 
 .btn--edit {
+  gap: 1.2rem;
   width: 100%;
-  border-radius: 0.5rem;
-  background-color: rgba(58, 54, 219, 0.05);
-
-  font-size: var(--font-size-14);
-  font-weight: 400;
-  line-height: 14.63px;
-  color: var(--deep-blue-color);
-  margin-bottom: 1rem;
+  padding: 1.2rem 1.6rem;
+  border: none;
+  text-align: left;
+  color: rgb(58, 54, 219);
+  background-color: rgba(58, 54, 219, 0.15);
+  transition: all 0.2s;
+  margin-bottom: 0.8rem;
 }
 
 .btn--edit:hover {
-  background-color: var(--primary-bg-color);
+  background-color: rgba(58, 54, 219, 0.1);
 }
 
 .btn--edit img,
@@ -272,19 +323,26 @@
 }
 
 .btn--delete {
+  gap: 1.2rem;
   width: 100%;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 105, 180, 0.05);
-
-  font-size: var(--font-size-14);
-  font-weight: 400;
-  line-height: 14.63px;
-  color: var(--red-pink-color);
+  padding: 1.2rem 1.6rem;
+  border: none;
+  text-align: left;
+  transition: all 0.2s;
+  margin-bottom: 0.8rem;
+  color: rgb(255, 71, 87);
+  background-color: rgba(255, 71, 87, 0.15);
 }
 
 .btn--delete:hover {
-  background-color: var(--primary-bg-color);
+  background-color: rgba(255, 71, 87, 0.1);
 }
+
+.btn img {
+  width: 20px;
+  height: 20px;
+}
+
 /* Status */
 
 .status {
@@ -299,9 +357,9 @@
 
 .status-complete {
   width: 16rem;
-  background-color: rgba(58, 54, 219, 0.1);
+  background-color: rgba(22, 163, 74, 0.15);
   padding: 1.5rem 4.5rem;
-  color: var(--deep-blue-color);
+  color: rgb(22, 163, 74);
   font-size: var(--font-size-14);
   line-height: 1.82rem;
   border-radius: 2.25rem;
@@ -309,10 +367,10 @@
 
 .status-pending {
   width: 16rem;
-  background: rgba(3, 168, 158, 0.1);
+  background-color: rgba(234, 179, 8, 0.15);
   padding: 1.5rem 4.5rem;
 
-  color: var(--blue-green-color);
+  color: rgb(234, 179, 8);
   font-size: var(--font-size-14);
   line-height: 1.82rem;
   border-radius: 2.25rem;
@@ -320,10 +378,10 @@
 
 .status-cancel {
   width: 16rem;
-  background: rgba(255, 105, 180, 0.1);
+  background-color: rgba(225, 29, 72, 0.15);
   padding: 1.5rem 4.5rem;
 
-  color: var(--red-pink-color);
+  color: rgb(225, 29, 72);
   font-size: var(--font-size-14);
   line-height: 1.82rem;
   border-radius: 2.25rem;
@@ -428,7 +486,6 @@
   margin-bottom: 1rem;
   opacity: 0;
   transform: translateX(100%);
-  transition: all 0.3s ease-in-out;
 }
 
 .notification.show {
@@ -444,8 +501,8 @@
 .notification-content {
   background: var(--white-color);
   border-radius: var(--space-8);
-  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.15);
-  padding: var(--space-16);
+  box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.2);
+  padding: 2rem;
   margin: var(--space-8);
 }
 
@@ -457,7 +514,9 @@
 }
 
 .notification-message {
-  font-size: var(--font-size-13);
+  font-size: var(--font-size-16);
+  text-align: center;
+  margin: 1.5rem 0;
 }
 
 .notification-title {
@@ -469,23 +528,27 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--font-size-16);
+  font-size: var(--font-size-26);
   padding: 0;
 }
 
 .notification-buttons {
   display: flex;
-  gap: var(--space-8);
-  margin-top: 1.2rem;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .btn-confirm,
 .btn-cancel {
-  padding: 0.6rem 1.2rem;
-  border-radius: 0.4rem;
+  padding: 1rem 2.5rem;
+  border-radius: 0.6rem;
   border: none;
   cursor: pointer;
+  font-size: var(--font-size-16);
   font-weight: 500;
+  min-width: 120px;
+  transition: all 0.2s ease;
 }
 
 .btn-confirm {
@@ -493,19 +556,46 @@
   color: var(--white-color);
 }
 
+.btn-confirm:hover {
+  background: var(--success-dark, #15803d);
+}
+
 .btn-cancel {
   background: var(--primary-bg-color);
   color: var(--black-color);
 }
 
+.btn-cancel:hover {
+  background: var(--gray-light, #e5e7eb);
+}
+
+.notification--warning {
+  position: absolute;
+  top: 50vh;
+  left: -175%;
+  width: 90%;
+  max-width: 400px;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+.notification--warning.show {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.notification--warning.hide {
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.notification-content.warning {
+  border-left: 0.4rem solid var(--warning);
+}
 .notification-content.success {
   border-left: 0.4rem solid var(--success);
 }
 .notification-content.error {
   border-left: 0.4rem solid var(--error);
-}
-.notification-content.warning {
-  border-left: 0.4rem solid var(--warning);
 }
 .notification-content.info {
   border-left: 0.4rem solid var(--info);
@@ -518,15 +608,57 @@
 /* Sort icon */
 .sort-icon {
   cursor: pointer;
-  margin-left: 5px;
+  margin-left: 0.5rem;
 }
+
 .sort-icon::after {
   content: '▲';
   display: inline-block;
 }
+
 .sort-icon.descending::after {
   content: '▼';
 }
+
+/* loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  width: 5rem;
+  height: 5rem;
+  border: 0.4rem solid #f3f3f3;
+  border-top: 0.4rem solid #3498db;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-text {
+  color: var(--black-color);
+  font-size: var(--font-size-16);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @media screen and (max-width: 768px) {
   .btn-trigger {
     display: none;
@@ -551,5 +683,19 @@
   .btn--primary {
     padding: 0.5rem;
     font-size: var(--font-size-13);
+  }
+
+  #notification-container {
+    width: 95%;
+  }
+
+  .notification-buttons {
+    flex-direction: column;
+  }
+
+  .btn-confirm,
+  .btn-cancel {
+    width: 100%;
+    margin: 0.5rem 0;
   }
 }

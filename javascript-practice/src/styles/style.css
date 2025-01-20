@@ -154,7 +154,6 @@
   gap: 1rem;
 }
 
-
 /* Style the dropdown options */
 .form__group-input--select option {
   padding: var(--space-8);
@@ -226,14 +225,14 @@
   flex: 1;
   background-color: var(--primary-bg-color);
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 2rem 2rem 3rem;
 }
 
 .preview__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 3.5rem;
 }
 
 .preview__header-title {
@@ -510,6 +509,7 @@
   line-height: 13.02px;
   text-align: left;
   margin-bottom: 2rem;
+  color: rgba(153, 178, 198, 1);
 }
 
 .preview-footer__company {
@@ -613,11 +613,9 @@
   .table__row {
     display: flex;
     flex-direction: column;
-
     margin-bottom: 1.6rem;
     border-radius: 1.2rem;
     box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.08);
-
     margin: 1rem auto;
   }
 
@@ -638,6 +636,7 @@
     justify-content: flex-start;
     align-items: center;
     content: attr(data-label);
+
     width: 10rem;
     min-width: 9rem;
     color: var(--black-color);

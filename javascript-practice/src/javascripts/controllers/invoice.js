@@ -546,6 +546,7 @@ class InvoiceController {
       // Update view after any type of deletion
       this.view.renderInvoiceList(this.invoices);
       this.view.updateHeaderCheckbox();
+      this.view.closeActivePopup();
     } catch (error) {
       this.userErrorMessage.handleError(error, {
         context: 'InvoiceController',

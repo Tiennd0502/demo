@@ -133,15 +133,19 @@ class InvoiceController {
   }
 
   async loadInvoices() {
+    this.loading.show()
     try {
       this.invoices = await this.dataHandler.getInvoiceList();
       this.view.renderInvoiceList(this.invoices);
       sortHandlers(this.invoices, (sortedInvoices) => this.view.renderInvoiceList(sortedInvoices));
+      await new Promise((resolve) => setTimeout(resolve, 500))
     } catch (error) {
       this.userErrorMessage.handleError(error, {
         context: 'InvoiceController',
         operation: 'loading',
       });
+    } finally {
+      this.loading.hide()
     }
   }
 

@@ -34,7 +34,6 @@ class DataHandler {
    */
   async createInvoiceWithProducts(invoiceData, products) {
     try {
-      // First create the invoice
       const invoice = await fetch(`${this.rootUrl}/invoices`, {
         method: 'POST',
         headers: {
@@ -54,7 +53,6 @@ class DataHandler {
 
       const createdInvoice = await invoice.json();
 
-      // Then create all products with the new invoice ID
       const productPromises = products.map((product) =>
         fetch(`${this.rootUrl}/products`, {
           method: 'POST',
